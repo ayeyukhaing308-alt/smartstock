@@ -149,7 +149,8 @@
   function dayKey(ts) {
     const z = tz();
     const f = dayFmt[z] || (dayFmt[z] = new Intl.DateTimeFormat('en-CA', { timeZone: z, year: 'numeric', month: '2-digit', day: '2-digit' }));
-    return f.format(new Date(ts));
+    const d = new Date(ts);
+    return isNaN(d.getTime()) ? '' : f.format(d);   // a record with a missing/invalid time must not break every page: it just matches no date range
   }
   function addDays(key, n) {
     const d = new Date(key + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n);
@@ -157,7 +158,8 @@
   }
   function formatDate(ts, withTime) {
     const s = SS.settings ? SS.settings.get() : {};
-    const key = dayKey(ts); const [y, m, d] = key.split('-');
+    const key = dayKey(ts); if (!key) return '—';
+    const [y, m, d] = key.split('-');
     let out = s.dateFormat === 'MM/DD/YYYY' ? `${m}/${d}/${y}` : s.dateFormat === 'YYYY-MM-DD' ? key : `${d}/${m}/${y}`;
     if (withTime) out += ' ' + new Intl.DateTimeFormat('en-GB', { timeZone: tz(), hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(ts));
     return out;
