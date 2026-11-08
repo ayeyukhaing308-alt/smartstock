@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="my" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartStock</title>
+  <meta name="description" content="SmartStock — offline-first retail inventory management">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#14243A">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="print.css" media="print">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">S</span>
+        <span class="brand-name">SmartStock</span>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <div class="sidebar-foot">
+        <button class="nav-collapse" id="collapseBtn" type="button" aria-label="Collapse sidebar">«</button>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <div class="content-wrap">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">☰</button>
+        <button class="search-trigger" id="searchBtn" type="button">
+          <span aria-hidden="true">⌕</span>
+          <span data-i18n="search_placeholder">Search…</span>
+          <kbd>Ctrl K</kbd>
+        </button>
+        <div class="topbar-right">
+          <button class="status-pill save-pill" id="saveState" type="button" hidden aria-live="polite"></button>
+          <span class="status-pill" id="netStatus" role="status"></span>
+          <button class="icon-btn" id="langBtn" type="button" aria-label="Language">မြန်</button>
+          <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle theme">◐</button>
+          <button class="icon-btn" id="helpBtn" type="button" aria-label="Keyboard shortcuts">?</button>
+        </div>
+      </header>
+      <main id="main" class="main" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <div id="modalRoot"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
