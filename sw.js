@@ -4,9 +4,9 @@
  * Same-origin files are fetched network-first, so editing code during development (Live Server) still shows your
  * changes while online. Fonts are cached the first time they load online, so they are not guaranteed offline before that.
  */
-const VERSION = 'smartstock-shell-v15';
+const VERSION = 'smartstock-shell-v16';
 const FONTS = 'smartstock-fonts-v1';
-const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'styles.css', 'print.css', 'app.js', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
+const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'styles.css', 'print.css', 'app.js', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'favicon-32.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => Promise.all(SHELL.map((u) => c.add(u).catch(() => null)))).then(() => self.skipWaiting()));
