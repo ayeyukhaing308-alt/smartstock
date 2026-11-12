@@ -124,6 +124,7 @@ h2 { font-size: 17px; margin: 0; font-weight: 600; }
 .btn.primary:hover { background: var(--navy-2); }
 .btn.danger { background: var(--danger-solid); color: #fff; border-color: var(--danger-solid); }
 .btn.sm { height: 30px; padding: 0 10px; font-size: 12px; }
+.btn.xs { height: 26px; padding: 0 8px; font-size: 11px; font-weight: 500; color: var(--text-2); border-radius: 7px; }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -222,6 +223,7 @@ th.num, td.num { text-align: right; }
 .pos-tile:disabled { opacity: .5; cursor: not-allowed; }
 .pt-name { font-weight: 550; line-height: 1.35; overflow-wrap: anywhere; }
 .pt-price { font-variant-numeric: tabular-nums; }
+.pt-ws { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--warning-text); }
 .pt-stock { font-size: 12px; color: var(--text-2); margin-top: auto; }
 .pt-stock.low { color: var(--warning-text); } .pt-stock.out { color: var(--danger-text); }
 .pos-cart { position: sticky; top: 76px; }
