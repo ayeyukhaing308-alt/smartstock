@@ -259,10 +259,10 @@
     select(id, options, value) {
       return el('select', { class: 'input', id }, options.map(([v, l]) => el('option', Object.assign({ value: v }, String(v) === String(value) ? { selected: true } : {}), l)));
     },
-    /** Sortable, paginated table. cfg: {columns:[{key,label,num,sortable,sortValue,render}], rows, pageSize, rowKey, selectable, onSelect, empty:{title,hint}} */
+    /** Sortable, paginated table. cfg: {columns:[{key,label,num,sortable,sortValue,render}], rows, pageSize, scroll (true = one long page, no paging), rowKey, selectable, onSelect, empty:{title,hint}} */
     dataTable(cfg) {
       const st = { rows: cfg.rows || [], sortKey: null, dir: 1, page: 0, selected: new Set() };
-      const size = cfg.pageSize || 15, rk = cfg.rowKey || 'id';
+      const size = cfg.scroll ? 1e9 : (cfg.pageSize || 15), rk = cfg.rowKey || 'id';
       const wrap = el('div');
       const notify = () => cfg.onSelect && cfg.onSelect(Array.from(st.selected));
       function sorted() {
@@ -296,7 +296,7 @@
         wrap.append(el('div', { class: 'table-wrap' }, el('table', null, el('thead', null, head), el('tbody', null, body))),
           el('div', { class: 'pager' },
             el('span', { class: 'small muted' }, `${st.page * size + 1}–${st.page * size + slice.length} / ${all.length}`),
-            el('div', { class: 'btn-row' },
+            cfg.scroll ? null : el('div', { class: 'btn-row' },
               el('button', { class: 'btn sm', type: 'button', disabled: st.page === 0, onclick: () => { st.page--; draw(); } }, '‹'),
               el('button', { class: 'btn sm', type: 'button', disabled: st.page >= pages - 1, onclick: () => { st.page++; draw(); } }, '›'))));
       }
@@ -1887,7 +1887,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     }
     function draw() {
       const cn = cats();
-      table = ui.dataTable({ rows: rows(), pageSize: 15, selectable: true, onSelect: (s) => { selected = s; bulkInfo.textContent = s.length ? s.length + ' selected' : ''; }, empty: { title: 'No products found', hint: 'Add your first product with “+ New product”, or adjust the filters.' }, columns: [
+      table = ui.dataTable({ rows: rows(), scroll: true, selectable: true, onSelect: (s) => { selected = s; bulkInfo.textContent = s.length ? s.length + ' selected' : ''; }, empty: { title: 'No products found', hint: 'Add your first product with “+ New product”, or adjust the filters.' }, columns: [
         { key: 'name', label: 'Product', render: (p) => el('span', null, el('button', { class: 'link-btn', type: 'button', onclick: () => openDetails(p.id, draw) }, p.name), el('span', { class: 'sub' }, [p.brand, p.variant && [p.variant.size, p.variant.color, p.variant.model].filter(Boolean).join('/')].filter(Boolean).join(' · '))) },
         { key: 'sku', label: 'SKU / Barcode', render: (p) => el('span', null, p.sku, p.barcode ? el('span', { class: 'sub' }, p.barcode) : null) },
         { key: 'cat', label: 'Category', sortValue: (p) => cn[p.categoryId] || '', render: (p) => cn[p.categoryId] || '—' },
