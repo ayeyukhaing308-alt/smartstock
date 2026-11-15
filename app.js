@@ -1292,7 +1292,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       ];
       if (canCost) cols.push({ key: 'cost', label: 'Cost value', num: true, sortValue: (r) => (Number(r.p.stock) || 0) * (r.p.avgCost || 0), render: (r) => formatMMK(Math.round((Number(r.p.stock) || 0) * (r.p.avgCost != null ? r.p.avgCost : (r.p.purchasePrice || 0)))) });
       cols.push({ key: 'act', label: '', sortable: false, render: (r) => el('div', { class: 'row-actions' }, el('button', { class: 'btn sm', type: 'button', onclick: () => openAdjustDialog(r.p.id, () => SS.app.refresh()) }, 'Adjust')) });
-      const table = ui.dataTable({ columns: cols, rows, rowKey: 'k', empty: { title: 'No products to show', hint: 'Add products on the Products page, or change the filters.' } });
+      const table = ui.dataTable({ columns: cols, rows, rowKey: 'k', scroll: true, empty: { title: 'No products to show', hint: 'Add products on the Products page, or change the filters.' } });
       rows.forEach((r) => { r.k = r.p.id; });
       table.setRows(rows);
       return el('div', null,
@@ -1306,7 +1306,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
 
     function moves() {
       const rows = movements({ type: st.type, search: st.search, from: st.from, to: st.to });
-      const table = ui.dataTable({ rowKey: 'id', pageSize: 20, rows, empty: { title: 'No stock movements', hint: 'Every stock change is recorded here automatically.' }, columns: [
+      const table = ui.dataTable({ rowKey: 'id', scroll: true, rows, empty: { title: 'No stock movements', hint: 'Every stock change is recorded here automatically.' }, columns: [
         { key: 'createdAt', label: 'Time', render: (m) => formatDate(m.createdAt, true) },
         { key: 'productName', label: 'Product' },
         { key: 'type', label: 'Type', render: (m) => (TYPES[m.type] || {}).label || m.type },
@@ -1421,7 +1421,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const holder = el('div', { class: 'card' });
     function draw() {
       const rows = all().filter((c) => (st.status === 'all' || (c.status || 'active') === st.status) && (!st.search || (c.name + ' ' + (c.description || '')).toLowerCase().includes(st.search.toLowerCase())));
-      const t = ui.dataTable({ rows, pageSize: 15, empty: { title: 'No categories yet', hint: 'Create your first category to organise products.' }, columns: [
+      const t = ui.dataTable({ rows, scroll: true, empty: { title: 'No categories yet', hint: 'Create your first category to organise products.' }, columns: [
         { key: 'name', label: 'Category', render: (c) => el('span', null, c.name, c.description ? el('span', { class: 'sub' }, c.description) : null) },
         { key: 'count', label: 'Products', num: true, sortValue: (c) => productCount(c.id, true), render: (c) => String(productCount(c.id, true)) },
         { key: 'status', label: 'Status', render: (c) => (c.status === 'archived' ? ui.badge('Archived', 'warning') : ui.badge('Active', 'success')) },
