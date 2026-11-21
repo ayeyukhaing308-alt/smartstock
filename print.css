@@ -9,4 +9,3 @@
   body.printing-receipt .receipt-preview { padding: 0; background: none; overflow: visible; }
   body.printing-receipt .receipt { box-shadow: none; margin: 0; }
 }
-@media print { body::before { display: none !important; } body { background: #fff !important; } .card, .kpi { background: #fff !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; } }
