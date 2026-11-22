@@ -1,3 +1,107 @@
+/* SmartStock — icons.js
+ * One consistent icon set: Lucide (ISC licence), inline SVG paths for just the icons the app uses, so there is no
+ * network dependency and nothing extra to load. 24x24 grid, 2px stroke, round caps.
+ *   SS.icons.make('package', 18)  -> <svg> element        SS.icons.forLabel('Edit') -> <svg> | null (button icons)
+ */
+(function () {
+  'use strict';
+  const SS = (window.SmartStock = window.SmartStock || {});
+  const NS = 'http://www.w3.org/2000/svg';
+  const P = {
+    'layout-dashboard': '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+    'package': '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+    'package-plus': '<path d="M16 16h6"/><path d="M19 13v6"/><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/>',
+    'package-minus': '<path d="M16 16h6"/><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/>',
+    'tags': '<path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19"/><path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="6.5" cy="9.5" r=".5" fill="currentColor"/>',
+    'boxes': '<path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"/><path d="m7 16.5-4.74-2.85"/><path d="m7 16.5 5-3"/><path d="M7 16.5v5.17"/><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"/><path d="m17 16.5-5-3"/><path d="m17 16.5 4.74-2.85"/><path d="M17 16.5v5.17"/><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"/><path d="M12 8 7.26 5.15"/><path d="m12 8 4.74-2.85"/><path d="M12 13.5V8"/>',
+    'clipboard-check': '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+    'shopping-cart': '<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
+    'store': '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>',
+    'shopping-bag': '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+    'truck': '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+    'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    'wallet': '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+    'banknote': '<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+    'chart-column': '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+    'chart-combined': '<path d="M12 16v5"/><path d="M16 14v7"/><path d="M20 10v11"/><path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/><path d="M4 18v3"/><path d="M8 14v7"/>',
+    'bell': '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+    'settings': '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+    'database-backup': '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 12a9 3 0 0 0 5 2.69"/><path d="M21 9.3V5"/><path d="M3 5v14a9 3 0 0 0 6.47 2.88"/><path d="M12 12v4h4"/><path d="M13 20a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L12 16"/>',
+    'search': '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    'pencil': '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',
+    'trash-2': '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>',
+    'plus': '<path d="M5 12h14"/><path d="M12 5v14"/>',
+    'minus': '<path d="M5 12h14"/>',
+    'printer': '<path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/>',
+    'download': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+    'upload': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>',
+    'barcode': '<path d="M3 5v14"/><path d="M8 5v14"/><path d="M12 5v14"/><path d="M17 5v14"/><path d="M21 5v14"/>',
+    'calendar-days': '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>',
+    'history': '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+    'chevron-left': '<path d="m15 18-6-6 6-6"/>',
+    'chevron-right': '<path d="m9 18 6-6-6-6"/>',
+    'chevron-down': '<path d="m6 9 6 6 6-6"/>',
+    'chevron-up': '<path d="m18 15-6-6-6 6"/>',
+    'chevrons-up': '<path d="m17 11-5-5-5 5"/><path d="m17 18-5-5-5 5"/>',
+    'chevrons-down': '<path d="m7 6 5 5 5-5"/><path d="m7 13 5 5 5-5"/>',
+    'arrow-right': '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    'panel-left-close': '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/>',
+    'panel-left-open': '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/>',
+    'menu': '<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>',
+    'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    'sun': '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+    'moon': '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    'languages': '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+    'circle-help': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+    'trending-up': '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+    'trending-down': '<polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>',
+    'triangle-alert': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    'circle-check': '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    'circle-x': '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+    'info': '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+    'layers': '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+    'circle-dollar': '<circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/>',
+    'lock': '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    'lock-open': '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+    'eye-off': '<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/>',
+    'undo': '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/>',
+    'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+    'check': '<path d="M20 6 9 17l-5-5"/>',
+    'save': '<path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/>',
+    'receipt': '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/>',
+    'wifi': '<path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/>',
+    'sliders': '<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/>',
+    'inbox': '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'
+  };
+  function make(name, size, cls) {
+    const s = document.createElementNS(NS, 'svg');
+    const n = size || 18;
+    s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('width', n); s.setAttribute('height', n);
+    s.setAttribute('fill', 'none'); s.setAttribute('stroke', 'currentColor'); s.setAttribute('stroke-width', '2');
+    s.setAttribute('stroke-linecap', 'round'); s.setAttribute('stroke-linejoin', 'round');
+    s.setAttribute('aria-hidden', 'true'); s.setAttribute('focusable', 'false'); s.setAttribute('class', 'ico' + (cls ? ' ' + cls : ''));
+    s.innerHTML = P[name] || P.info;
+    return s;
+  }
+  /* Icon for a button, chosen from its English label (el() calls this with the text before translation). */
+  const RULES = [
+    [/^\+\s|^New\b|^Add\b|^Create\b/i, 'plus'], [/^Edit\b|^Rename\b/i, 'pencil'], [/^(Delete|Remove|Clear)\b/i, 'trash-2'],
+    [/^(Void|Cancel sale|Cancel order)\b/i, 'circle-x'], [/^(Print|Reprint|Invoice)\b/i, 'printer'], [/barcode|label/i, 'barcode'],
+    [/^(Download|Export)\b/i, 'download'], [/^(Import|Upload|Restore|Replace my data)\b/i, 'upload'], [/^Save\b/i, 'save'],
+    [/^(Unlock|Show \()/i, 'lock-open'], [/^Hide$/i, 'eye-off'], [/^Bulk price/i, 'tags'], [/^(Adjust|Bulk stock)/i, 'sliders'],
+    [/^Withdraw/i, 'banknote'], [/^Close the day/i, 'circle-check'], [/^Go to\b/i, 'arrow-right'], [/^(Refund|Return)\b/i, 'undo'],
+    [/^Search\b/i, 'search'], [/^Protect|^Ask browser/i, 'database-backup']
+  ];
+  function forLabel(text) {
+    const s = String(text || '').trim(); if (!s) return null;
+    for (const [re, name] of RULES) if (re.test(s)) return make(name, 16);
+    return null;
+  }
+  SS.icons = { make, forLabel, names: Object.keys(P) };
+})();
+
+;
 /* SmartStock — utils.js
  * Shared helpers: namespace, i18n, MMK formatting, dates, safe DOM, toast, modal.
  */
@@ -118,13 +222,21 @@
       else if (v === true) node.setAttribute(k, '');
       else node.setAttribute(k, (k === 'placeholder' || k === 'title' || k === 'aria-label' || k === 'alt' || k === 'label') && typeof v === 'string' ? i18n.tr(v) : v);
     }
+    const isBtn = /(^|\s)btn(\s|$)/.test(node.className || '');
+    let seen = false, btnIcon = null;   // buttons get a matching icon from their first text child (see SS.icons.forLabel)
     (function add(list) {
       for (const c of list) {
         if (c == null || c === false) continue;
         if (Array.isArray(c)) add(c);
-        else node.append(c.nodeType ? c : document.createTextNode(i18n.tr(String(c))));
+        else if (c.nodeType) { node.append(c); if (isBtn) seen = true; }
+        else {
+          const raw = String(c); let txt = i18n.tr(raw);
+          if (isBtn && !seen) { seen = true; if (SS.icons) { btnIcon = SS.icons.forLabel(raw); if (btnIcon && /^\+\s/.test(txt)) txt = txt.replace(/^\+\s*/, ''); } }
+          node.append(document.createTextNode(txt));
+        }
       }
     })(children);
+    if (btnIcon) node.prepend(btnIcon);
     return node;
   }
   function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; }
@@ -174,15 +286,17 @@
   /* ---------- Toast ---------- */
   function toast(message, type) {
     const root = document.getElementById('toasts'); if (!root) return;
-    const node = el('div', { class: 'toast ' + (type || 'info'), role: type === 'error' ? 'alert' : 'status' }, message);
+    const ico = { success: 'circle-check', warning: 'triangle-alert', error: 'circle-x' }[type] || 'info';
+    const node = el('div', { class: 'toast ' + (type || 'info'), role: type === 'error' ? 'alert' : 'status' }, el('span', { class: 't-ico' }, SS.icons.make(ico, 16)), el('span', { class: 't-msg' }, message));
     root.append(node);
-    setTimeout(() => node.remove(), type === 'error' ? 7000 : 3800);
+    setTimeout(() => { node.classList.add('out'); setTimeout(() => node.remove(), 220); }, type === 'error' ? 7000 : 3800);
   }
 
   /* ---------- Modal ---------- */
   let lastFocus = null;
   function closeModal() {
-    const root = document.getElementById('modalRoot'); clear(root);
+    const root = document.getElementById('modalRoot'); const back = root.firstElementChild;
+    if (back && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { back.classList.add('closing'); setTimeout(() => { if (back.parentNode === root) root.removeChild(back); }, 150); } else clear(root);
     if (lastFocus && lastFocus.focus) lastFocus.focus();
     document.dispatchEvent(new CustomEvent('ss:modal-closed'));
   }
@@ -245,9 +359,10 @@
   function formatQty(v) { return (Number(v) || 0).toLocaleString('en-US', { maximumFractionDigits: 3 }); }
 
   /* ---------- Reusable UI components ---------- */
+  const REQUIRED_LABELS = new Set(['Name', 'Product name', 'Supplier name', 'Selling price (MMK)', 'Reason', 'Amount (MMK)', 'Quantity']);
   const ui = {
     field(label, id, control, help) {
-      return el('div', { class: 'field' }, el('label', { for: id }, label), control, help ? el('span', { class: 'small muted' }, help) : null,
+      return el('div', { class: 'field' }, el('label', { for: id, class: REQUIRED_LABELS.has(label) ? 'req' : null }, label), control, help ? el('span', { class: 'small muted' }, help) : null,
         el('span', { class: 'err', id: id + 'Err', role: 'alert' }));
     },
     setError(input, message) {
@@ -287,7 +402,7 @@
             const sortable = c.sortable !== false && c.key;
             return el('th', { class: c.num ? 'num' : '', 'aria-sort': st.sortKey === c.key ? (st.dir === 1 ? 'ascending' : 'descending') : null },
               sortable ? el('button', { type: 'button', class: 'th-btn', onclick: () => { if (st.sortKey === c.key) st.dir *= -1; else { st.sortKey = c.key; st.dir = 1; } draw(); } },
-                c.label + (st.sortKey === c.key ? (st.dir === 1 ? ' ▲' : ' ▼') : '')) : c.label);
+                [c.label, st.sortKey === c.key ? SS.icons.make(st.dir === 1 ? 'chevron-up' : 'chevron-down', 14) : null]) : c.label);
           }));
         const body = slice.map((r) => el('tr', null,
           cfg.selectable ? el('td', null, el('input', { type: 'checkbox', 'aria-label': 'Select row', checked: st.selected.has(r[rk]),
@@ -297,8 +412,8 @@
           el('div', { class: 'pager' },
             el('span', { class: 'small muted' }, `${st.page * size + 1}–${st.page * size + slice.length} / ${all.length}`),
             cfg.scroll ? null : el('div', { class: 'btn-row' },
-              el('button', { class: 'btn sm', type: 'button', disabled: st.page === 0, onclick: () => { st.page--; draw(); } }, '‹'),
-              el('button', { class: 'btn sm', type: 'button', disabled: st.page >= pages - 1, onclick: () => { st.page++; draw(); } }, '›'))));
+              el('button', { class: 'btn sm', type: 'button', disabled: st.page === 0, onclick: () => { st.page--; draw(); }, 'aria-label': 'Previous page' }, SS.icons.make('chevron-left', 16)),
+              el('button', { class: 'btn sm', type: 'button', disabled: st.page >= pages - 1, onclick: () => { st.page++; draw(); }, 'aria-label': 'Next page' }, SS.icons.make('chevron-right', 16)))));
       }
       draw();
       return {
@@ -337,6 +452,8 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
 })();
 
 ;
+;(function(){window.SmartStock.i18n.addPhrases({"Catalog": "ကုန်ပစ္စည်းစာရင်း", "Trade": "ရောင်းဝယ်ရေး", "Finance": "ငွေကြေး", "Expand sidebar": "မီနူးကို ဖြန့်မည်", "Collapse": "ခေါက်မည်", "Switch to dark mode": "အမှောင်မုဒ်သို့ ပြောင်းမည်", "Switch to light mode": "အလင်းမုဒ်သို့ ပြောင်းမည်", "Account menu": "အကောင့်မီနူး", "Breadcrumb": "လမ်းကြောင်း", "Loading": "ဖွင့်နေသည်", "Inventory & POS": "လက်ကျန်စာရင်းနှင့် POS", "Previous page": "ယခင်စာမျက်နှာ", "Next page": "နောက်စာမျက်နှာ", "vs yesterday": "မနေ့ကနှင့် နှိုင်းယှဉ်", "{} units in stock": "စတော့တွင် {} ယူနစ်", "Show cost (admin PIN)": "ကုန်ကျစရိတ်ပြရန် (admin PIN)", "Total stock value": "စတော့တန်ဖိုးစုစုပေါင်း", "Today's sales": "ယနေ့ရောင်းချမှု", "Monthly sales": "ယခုလ ရောင်းချမှု", "Total profit": "အမြတ်စုစုပေါင်း", "Low stock products": "စတော့နည်းသော ကုန်ပစ္စည်းများ", "{} sale(s)": "ရောင်းချမှု {} ခု", "{} sale(s) this month": "ယခုလ ရောင်းချမှု {} ခု", "{} out of stock": "ကုန်နေသည် {} ခု", "View inventory": "လက်ကျန်ပစ္စည်းကြည့်ရန်", "Period summary": "ကာလအနှစ်ချုပ်", "Sales overview": "ရောင်းချမှုခြုံငုံသုံးသပ်ချက်", "Revenue trends": "ဝင်ငွေလမ်းကြောင်း", "Profit analysis": "အမြတ်ခွဲခြမ်းစိတ်ဖြာမှု", "Last 8 weeks": "နောက်ဆုံး ရက်သတ္တပတ် ၈ ပတ်", "Product category distribution": "ကုန်ပစ္စည်းအမျိုးအစားခွဲဝေမှု", "Stock level overview": "စတော့အဆင့်ခြုံငုံသုံးသပ်ချက်", "Low & out of stock": "စတော့နည်း/ကုန်နေသော ပစ္စည်းများ", "Profit figures are hidden": "အမြတ်ကိန်းဂဏန်းများကို ဖျောက်ထားသည်", "{} products": "ကုန်ပစ္စည်း {} ခု", "No sales in the last 30 days": "ရက် ၃၀ အတွင်း ရောင်းချမှု မရှိပါ", "No sales in the last 8 weeks": "ရက်သတ္တပတ် ၈ ပတ်အတွင်း ရောင်းချမှု မရှိပါ"});})();
+;(function(){window.SmartStock.i18n.addPhrases({"Order": "အစီအစဉ်", "Move to top": "ထိပ်ဆုံးသို့ ရွှေ့မည်", "Move up": "အပေါ်သို့ ရွှေ့မည်", "Move down": "အောက်သို့ ရွှေ့မည်", "Move to bottom": "အောက်ဆုံးသို့ ရွှေ့မည်", "Move selected to top": "ရွေးထားသည်များကို ထိပ်ဆုံးသို့", "Move selected to bottom": "ရွေးထားသည်များကို အောက်ဆုံးသို့", "Already at the top.": "အပေါ်ဆုံးရောက်နေပြီ။", "Already at the bottom.": "အောက်ဆုံးရောက်နေပြီ။", "Moved to the top.": "ထိပ်ဆုံးသို့ ရွှေ့ပြီးပါပြီ။", "Moved to the bottom.": "အောက်ဆုံးသို့ ရွှေ့ပြီးပါပြီ။"});})();
 /* SmartStock — storage.js
  * Persistent storage on IndexedDB behind a SYNCHRONOUS read/write API:
  *  - all collections are loaded into memory once at start (await SS.storage.init()); reads are instant
@@ -1562,7 +1679,26 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     return v;
   }
   const raw = (id) => SS.storage.collection.byId('products', id);
-  const views = () => SS.storage.read('products').map(view);
+  /* Manual product order: products carry an optional sortOrder; products without one stay in the order they were added (after the ordered ones). */
+  const orderKey = (p, i) => (p.sortOrder != null ? p.sortOrder : 1e9 + i);
+  const ordered = () => SS.storage.read('products').map((p, i) => [p, i]).sort((a, b) => orderKey(a[0], a[1]) - orderKey(b[0], b[1]) || a[1] - b[1]).map((x) => x[0]);
+  const views = () => ordered().map(view);
+  function saveOrder(ids) {
+    const pos = new Map(ids.map((id, i) => [id, i]));
+    SS.storage.write('products', SS.storage.read('products').map((p) => (pos.has(p.id) && p.sortOrder !== pos.get(p.id) ? Object.assign({}, p, { sortOrder: pos.get(p.id) }) : p)));
+  }
+  /** where: 'top' | 'bottom' (any number of products) | 'up' | 'down' (one product, relative to the neighbour in the visible list) */
+  function moveProducts(ids, where, visible) {
+    const all = ordered().map((p) => p.id); const set = new Set(ids);
+    const moved = all.filter((id) => set.has(id)); const rest = all.filter((id) => !set.has(id)); let next;
+    if (where === 'top') next = moved.concat(rest);
+    else if (where === 'bottom') next = rest.concat(moved);
+    else {
+      const id = ids[0]; const vi = visible.indexOf(id); const nb = visible[where === 'up' ? vi - 1 : vi + 1]; if (nb == null) return false;
+      next = all.filter((x) => x !== id); const at = next.indexOf(nb); next.splice(where === 'up' ? at : at + 1, 0, id);
+    }
+    saveOrder(next); return true;
+  }
 
   /* ---------- Images (IndexedDB) ---------- */
   const images = {
@@ -1885,6 +2021,12 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       return views().filter((p) => (st.archived === 'all' || (p.status || 'active') === st.archived) && (!st.cat || p.categoryId === st.cat) && (!st.stock || SS.inventory.stockStatus(p) === st.stock)
         && (!q || (p.name + ' ' + p.sku + ' ' + (p.barcode || '') + ' ' + (p.brand || '')).toLowerCase().includes(q)));
     }
+    function reorder(ids, where) {
+      const y = window.scrollY;
+      if (!moveProducts(ids, where, rows().map((p) => p.id))) return SS.utils.toast(where === 'up' ? 'Already at the top.' : 'Already at the bottom.', 'info');
+      draw(); window.scrollTo(0, y);
+    }
+    const ob = (ico, label, where, p) => el('button', { type: 'button', class: 'icon-btn ord', 'aria-label': label, title: label, onclick: () => reorder([p.id], where) }, SS.icons.make(ico, 16));
     function draw() {
       const cn = cats();
       table = ui.dataTable({ rows: rows(), scroll: true, selectable: true, onSelect: (s) => { selected = s; bulkInfo.textContent = s.length ? s.length + ' selected' : ''; }, empty: { title: 'No products found', hint: 'Add your first product with “+ New product”, or adjust the filters.' }, columns: [
@@ -1896,7 +2038,8 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
         { key: 'stock', label: 'Stock', num: true, sortValue: (p) => Number(p.stock) || 0, render: (p) => formatQty(p.stock) + ' ' + SS.inventory.unitOf(p) },
         { key: 'status', label: 'Status', sortValue: (p) => (p.status === 'archived' ? 'z' : SS.inventory.stockStatus(p)), render: (p) => p.status === 'archived' ? ui.badge('Archived', 'warning') : { out: ui.badge('Out', 'danger'), low: ui.badge('Low', 'warning'), ok: ui.badge('In stock', 'success') }[SS.inventory.stockStatus(p)] },
         { key: 'act', label: '', sortable: false, render: (p) => el('div', { class: 'row-actions' }, el('button', { class: 'btn sm', type: 'button', onclick: () => openForm(p.id, draw) }, 'Edit'),
-          el('button', { class: 'btn xs', type: 'button', onclick: async () => { const a = p.status !== 'archived'; if (a && !(await SS.utils.confirmDialog('Archive product?', `“${p.name}” will be hidden from lists and POS but stays in all past sales and reports.`, 'Archive'))) return; setArchived(p.id, a); draw(); } }, p.status === 'archived' ? 'Restore' : 'Archive')) }] });
+          el('button', { class: 'btn xs', type: 'button', onclick: async () => { const a = p.status !== 'archived'; if (a && !(await SS.utils.confirmDialog('Archive product?', `“${p.name}” will be hidden from lists and POS but stays in all past sales and reports.`, 'Archive'))) return; setArchived(p.id, a); draw(); } }, p.status === 'archived' ? 'Restore' : 'Archive')) },
+        { key: 'order', label: 'Order', num: true, sortable: false, render: (p) => el('div', { class: 'order-btns' }, ob('chevron-up', 'Move up', 'up', p), ob('chevron-down', 'Move down', 'down', p)) }] });
       clear(holder); holder.append(table.node);
     }
     const search = el('input', { class: 'input grow', type: 'search', placeholder: 'Search name, SKU or barcode…', 'aria-label': 'Search products', 'data-scan': '1' });
@@ -1911,7 +2054,9 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       el('div', { class: 'btn-row' }, el('button', { class: 'btn primary', type: 'button', onclick: () => openForm(null, draw) }, '+ New product'))),
       el('div', { class: 'toolbar' }, search, catSel, stockSel, archSel),
       el('div', { class: 'toolbar' }, el('button', { class: 'btn sm', type: 'button', onclick: () => openBulkPrice(selected, draw) }, 'Bulk price update'), el('button', { class: 'btn sm', type: 'button', onclick: () => openBulkStock(selected, draw) }, 'Bulk stock adjust'),
-        el('button', { class: 'btn sm', type: 'button', onclick: () => SS.barcode.openLabels(selected.map((id) => raw(id)).filter(Boolean).map(view)) }, 'Print barcode labels'), bulkInfo), holder);
+        el('button', { class: 'btn sm', type: 'button', onclick: () => SS.barcode.openLabels(selected.map((id) => raw(id)).filter(Boolean).map(view)) }, 'Print barcode labels'),
+        el('button', { class: 'btn sm', type: 'button', onclick: () => (selected.length ? (reorder(selected, 'top'), SS.utils.toast('Moved to the top.', 'success')) : SS.utils.toast('Select products first (use the checkboxes).', 'warning')) }, SS.icons.make('chevrons-up', 16), 'Move selected to top'),
+        el('button', { class: 'btn sm', type: 'button', onclick: () => (selected.length ? (reorder(selected, 'bottom'), SS.utils.toast('Moved to the bottom.', 'success')) : SS.utils.toast('Select products first (use the checkboxes).', 'warning')) }, SS.icons.make('chevrons-down', 16), 'Move selected to bottom'), bulkInfo), holder);
     draw();
   }
 
@@ -1923,7 +2068,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     SS.audit.record('product.purchase_price_changed', { type: 'product', id, label: before.name }, { previousPurchasePrice: before.purchasePrice }, { newPurchasePrice: price });
   }
 
-  SS.products = { recordPurchasePrice, view, openForm, openDetails, validate, create, update, setArchived, applyPrices, applyPriceSet, repairCosts, images, UNITS };
+  SS.products = { ordered, moveProducts, recordPurchasePrice, view, openForm, openDetails, validate, create, update, setArchived, applyPrices, applyPriceSet, repairCosts, images, UNITS };
   SS.pages = SS.pages || {}; SS.pages.products = page;
 })();
 
@@ -2554,7 +2699,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
 
     drawGrid = function () {
       clear(grid); const q = st.search.trim().toLowerCase();
-      const items = SS.storage.read('products').filter((p) => p.status !== 'archived' && (!st.cat || p.categoryId === st.cat) && (!q || (p.name + ' ' + p.sku + ' ' + (p.barcode || '')).toLowerCase().includes(q)));
+      const items = SS.products.ordered().filter((p) => p.status !== 'archived' && (!st.cat || p.categoryId === st.cat) && (!q || (p.name + ' ' + p.sku + ' ' + (p.barcode || '')).toLowerCase().includes(q)));
       if (!SS.storage.read('products').length) return grid.append(el('div', { class: 'empty' }, el('strong', null, 'No products yet'), 'Add products first, then sell them here.', el('div', { style: 'margin-top:10px' }, el('a', { class: 'btn primary', href: '#/products' }, 'Go to Products'))));
       if (!items.length) return grid.append(el('div', { class: 'empty' }, el('strong', null, 'No matching products'), 'Try another name, SKU or barcode.'));
       items.slice(0, 60).forEach((p) => { const status = SS.inventory.stockStatus(p);
@@ -2576,7 +2721,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
             el('button', { class: 'btn sm', type: 'button', 'aria-label': 'Increase', onclick: () => { l.qty = qty(l.qty + 1); cart.receivedEdited = false; redraw(); } }, '+'),
             el('span', { class: 'muted small' }, '× ' + formatMMK(pl.unitPrice) + (pl.priceTier === 'wholesale' ? ' · ' + SS.i18n.tr('Wholesale price') : '')),
             el('button', { class: 'btn sm', type: 'button', onclick: () => openLineDiscount(l) }, pl.discountAmount ? 'Disc −' + formatMMK(pl.discountAmount) : 'Discount'),
-            el('button', { class: 'btn sm', type: 'button', 'aria-label': 'Remove ' + pl.productName, onclick: () => { cart.lines.splice(i, 1); cart.receivedEdited = false; redraw(); } }, '✕')),
+            el('button', { class: 'btn sm', type: 'button', 'aria-label': 'Remove ' + pl.productName, onclick: () => { cart.lines.splice(i, 1); cart.receivedEdited = false; redraw(); } }, SS.icons.make('x', 16))),
           pl.error ? el('div', { class: 'err' }, pl.error) : null); });
 
       const customers = SS.storage.read('customers').filter((c) => c.status !== 'archived');
@@ -2940,7 +3085,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
         el('tbody', null, lines.map((l, i) => { const p = SS.storage.collection.byId('products', l.productId);
           const q = el('input', { class: 'input', type: 'number', min: '0', step: SS.inventory.isWholeUnit(p.unit) ? '1' : 'any', value: l.qty, style: 'width:90px;text-align:right', 'aria-label': 'Quantity for ' + p.name }); q.addEventListener('change', () => { l.qty = qty(q.value); draw(); });
           const c = el('input', { class: 'input', type: 'number', min: '0', step: '1', value: l.unitCost, style: 'width:120px;text-align:right', 'aria-label': 'Unit cost for ' + p.name }); c.addEventListener('change', () => { l.unitCost = c.value === '' ? '' : toInt(c.value); draw(); });
-          return el('tr', null, el('td', null, p.name, el('span', { class: 'sub' }, p.sku), p.trackBatches ? el('div', { class: 'batch-row' }, batchInput(l, 'batchNumber', 'Batch no.', 'text', p.name), batchInput(l, 'expiry', 'Expiry', 'date', p.name)) : null), el('td', { class: 'num' }, q), el('td', { class: 'num' }, c), el('td', { class: 'num' }, formatMMK(t.lines[i].lineTotal)), el('td', null, el('button', { class: 'btn sm', type: 'button', 'aria-label': 'Remove ' + p.name, onclick: () => { lines.splice(i, 1); draw(); } }, '✕'))); })))) : el('div', { class: 'empty' }, el('strong', null, 'No products yet'), 'Search above to add what you bought.'));
+          return el('tr', null, el('td', null, p.name, el('span', { class: 'sub' }, p.sku), p.trackBatches ? el('div', { class: 'batch-row' }, batchInput(l, 'batchNumber', 'Batch no.', 'text', p.name), batchInput(l, 'expiry', 'Expiry', 'date', p.name)) : null), el('td', { class: 'num' }, q), el('td', { class: 'num' }, c), el('td', { class: 'num' }, formatMMK(t.lines[i].lineTotal)), el('td', null, el('button', { class: 'btn sm', type: 'button', 'aria-label': 'Remove ' + p.name, onclick: () => { lines.splice(i, 1); draw(); } }, SS.icons.make('x', 16)))); })))) : el('div', { class: 'empty' }, el('strong', null, 'No products yet'), 'Search above to add what you bought.'));
       totalsEl.append(el('ul', { class: 'list' }, el('li', null, el('span', null, 'Products subtotal'), el('span', null, formatMMK(t.subtotal))), el('li', null, el('span', null, 'Additional costs (transport, etc.)'), el('span', null, '+' + formatMMK(t.additional))), el('li', null, el('span', null, 'Discount'), el('span', null, '−' + formatMMK(t.discount))), el('li', null, el('strong', null, 'Total'), el('strong', null, formatMMK(t.total)))),
         el('p', { class: 'muted small' }, 'Additional costs and discount are spread over the products, so each item’s stock cost includes its share.'));
     }
@@ -3252,7 +3397,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
   const SS = (window.SmartStock = window.SmartStock || {});
   const { el, formatMMK } = SS.utils;
   const NS = 'http://www.w3.org/2000/svg';
-  const PALETTE = ['#C5A46D', '#477BAA', '#27856A', '#D65353', '#8B7BB8', '#D69B36', '#5C8A9B'];
+  const PALETTE = ['#8B5CF6', '#60A5FA', '#34D399', '#F9A8D4', '#67E8F9', '#A78BFA', '#FDA4AF'];
   const colorOf = (s, i) => s.color || PALETTE[i % PALETTE.length];
   const svg = (tag, attrs, ...kids) => { const n = document.createElementNS(NS, tag); Object.keys(attrs || {}).forEach((k) => n.setAttribute(k, attrs[k])); kids.forEach((c) => c && n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c)); return n; };
   const compact = (v) => { const a = Math.abs(v); return a >= 1e6 ? (v / 1e6).toFixed(a >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M' : a >= 1e3 ? (v / 1e3).toFixed(a >= 1e4 ? 0 : 1).replace(/\.0$/, '') + 'k' : String(Math.round(v)); };
@@ -3264,6 +3409,20 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const lo = Math.floor(min / step) * step, hi = Math.ceil(max / step) * step; const ticks = []; for (let v = lo; v <= hi + step / 2; v += step) ticks.push(v); return { lo, hi, ticks };
   }
 
+  let gid = 0;
+  const grad = (defs, c, a0, a1) => { const id = 'cg' + (++gid); defs.append(svg('linearGradient', { id, x1: 0, y1: 0, x2: 0, y2: 1 }, svg('stop', { offset: '0%', 'stop-color': c, 'stop-opacity': a0 }), svg('stop', { offset: '100%', 'stop-color': c, 'stop-opacity': a1 }))); return 'url(#' + id + ')'; };
+  /** Smooth curve through the points; control points stay between neighbours so the line never overshoots. */
+  function smooth(pts) {
+    if (pts.length < 2) return 'M' + pts[0].join(',');
+    let d = 'M' + pts[0][0] + ',' + pts[0][1];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2, t = 0.18;
+      const lo = Math.min(p1[1], p2[1]), hi = Math.max(p1[1], p2[1]);
+      const c1y = Math.min(hi, Math.max(lo, p1[1] + (p2[1] - p0[1]) * t)), c2y = Math.min(hi, Math.max(lo, p2[1] - (p3[1] - p1[1]) * t));
+      d += ' C' + (p1[0] + (p2[0] - p0[0]) * t) + ',' + c1y + ' ' + (p2[0] - (p3[0] - p1[0]) * t) + ',' + c2y + ' ' + p2[0] + ',' + p2[1];
+    }
+    return d;
+  }
   function shell(cfg, kind, drawFn, legendItems) {
     const wrap = el('div', { class: 'chart', style: 'position:relative' }); const tip = el('div', { class: 'chart-tip', role: 'status', style: 'display:none' });
     const fmt = cfg.format || formatMMK;
@@ -3290,8 +3449,14 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       const W = 640, H = cfg.height || 240, P = { l: 52, r: 12, t: 12, b: 28 }; const all = series.flatMap((s) => s.values); const sc = scale(Math.min(0, Math.min.apply(null, all)), Math.max.apply(null, all));
       const x = (i) => (labels.length === 1 ? (P.l + W - P.r) / 2 : P.l + (W - P.l - P.r) * i / (labels.length - 1));
       const { g, y } = axes(cfg, fmt, sc.lo, sc.hi, sc.ticks, W, H, P, labels, x); const root = svg('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': labelFor(cfg, 'Line'), class: 'c-svg' }, g);
-      series.forEach((s, si) => { const c = colorOf(s, si); root.append(svg('polyline', { points: s.values.map((v, i) => x(i) + ',' + y(v)).join(' '), fill: 'none', stroke: c, 'stroke-width': 2.5, 'stroke-linejoin': 'round' })); });
-      series.forEach((s, si) => s.values.forEach((v, i) => { const c = svg('circle', { cx: x(i), cy: y(v), r: 4, fill: colorOf(s, si), class: 'c-pt', tabindex: 0, 'aria-label': `${labels[i]}: ${s.name} ${fmt(v)}` });
+      const defs = svg('defs'); root.append(defs);
+      const base = y(Math.max(0, sc.lo));
+      series.forEach((s, si) => {
+        const c = colorOf(s, si); const pts = s.values.map((v, i) => [x(i), y(v)]); const d = smooth(pts);
+        root.append(svg('path', { d: d + ' L' + pts[pts.length - 1][0] + ',' + base + ' L' + pts[0][0] + ',' + base + ' Z', fill: grad(defs, c, 0.34, 0), class: 'c-area' }),
+          svg('path', { d, fill: 'none', stroke: c, 'stroke-width': 2.75, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', style: 'filter:drop-shadow(0 4px 6px ' + c + '55)' }));
+      });
+      series.forEach((s, si) => s.values.forEach((v, i) => { const c = svg('circle', { cx: x(i), cy: y(v), r: labels.length > 20 ? 3 : 4.5, fill: colorOf(s, si), stroke: 'var(--surface)', 'stroke-width': 2, class: 'c-pt', tabindex: 0, 'aria-label': `${labels[i]}: ${s.name} ${fmt(v)}` });
         c.addEventListener('mousemove', (e) => show(e, [String(labels[i])].concat(series.map((q) => q.name + ': ' + fmt(q.values[i]))))); c.addEventListener('mouseleave', hide); c.addEventListener('focus', () => { const r = c.getBoundingClientRect(); show({ clientX: r.left, clientY: r.top }, [String(labels[i]), s.name + ': ' + fmt(v)]); }); c.addEventListener('blur', hide); root.append(c); }));
       return root;
     }, series.map((s, i) => ({ name: s.name, color: colorOf(s, i) })));
@@ -3303,9 +3468,10 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       const W = 640, H = cfg.height || 240, P = { l: 52, r: 12, t: 12, b: 28 }; const all = series.flatMap((s) => s.values); const sc = scale(Math.min(0, Math.min.apply(null, all)), Math.max.apply(null, all));
       const band = (W - P.l - P.r) / labels.length; const cx = (i) => P.l + band * (i + 0.5);
       const { g, y } = axes(cfg, fmt, sc.lo, sc.hi, sc.ticks, W, H, P, labels, cx); const root = svg('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': labelFor(cfg, 'Bar'), class: 'c-svg' }, g);
-      const bw = Math.min(40, band * 0.7 / series.length); const base = y(Math.max(0, sc.lo));
+      const defs = svg('defs'); root.append(defs);
+      const bw = Math.min(34, band * 0.62 / series.length); const base = y(Math.max(0, sc.lo));
       series.forEach((s, si) => s.values.forEach((v, i) => { const x0 = cx(i) - bw * series.length / 2 + si * bw; const top = Math.min(y(v), base), h = Math.max(1, Math.abs(y(v) - base));
-        const r = svg('rect', { x: x0 + 1, y: top, width: Math.max(1, bw - 2), height: h, rx: 2, fill: colorOf(s, si), class: 'c-bar', tabindex: 0, 'aria-label': `${labels[i]}: ${s.name} ${fmt(v)}` });
+        const r = svg('rect', { x: x0 + 1, y: top, width: Math.max(1, bw - 2), height: h, rx: 6, fill: grad(defs, colorOf(s, si), 1, 0.5), class: 'c-bar', tabindex: 0, 'aria-label': `${labels[i]}: ${s.name} ${fmt(v)}` });
         r.addEventListener('mousemove', (e) => show(e, [String(labels[i]), s.name + ': ' + fmt(v)])); r.addEventListener('mouseleave', hide); r.addEventListener('focus', () => { const b = r.getBoundingClientRect(); show({ clientX: b.left, clientY: b.top }, [String(labels[i]), s.name + ': ' + fmt(v)]); }); r.addEventListener('blur', hide); root.append(r); }));
       return root;
     }, series.map((s, i) => ({ name: s.name, color: colorOf(s, i) })));
@@ -3315,15 +3481,15 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const items = (cfg.items || []).filter((i) => i.value > 0); if (!items.length) return empty(cfg.empty);
     const total = items.reduce((a, i) => a + i.value, 0);
     return shell(Object.assign({}, cfg, { series: items }), 'donut', ({ fmt, show, hide }) => {
-      const S = 200, R = 80, r = 50, c = S / 2; const root = svg('svg', { viewBox: `0 0 ${S} ${S}`, role: 'img', 'aria-label': cfg.label || 'Doughnut chart', class: 'c-svg c-donut' });
+      const S = 200, R = 82, r = 56, c = S / 2; const root = svg('svg', { viewBox: `0 0 ${S} ${S}`, role: 'img', 'aria-label': cfg.label || 'Doughnut chart', class: 'c-svg c-donut' });
       let a0 = -Math.PI / 2;
       items.forEach((it, i) => { const a1 = a0 + (it.value / total) * Math.PI * 2 - (items.length > 1 ? 0.012 : 0); const big = a1 - a0 > Math.PI ? 1 : 0; const p = (rad, a) => (c + rad * Math.cos(a)) + ',' + (c + rad * Math.sin(a));
         const d = items.length === 1 ? `M${c},${c - R} A${R},${R} 0 1 1 ${c - 0.01},${c - R} L${c - 0.01},${c - r} A${r},${r} 0 1 0 ${c},${c - r} Z` : `M${p(R, a0)} A${R},${R} 0 ${big} 1 ${p(R, a1)} L${p(r, a1)} A${r},${r} 0 ${big} 0 ${p(r, a0)} Z`;
-        const path = svg('path', { d, fill: PALETTE[i % PALETTE.length], class: 'c-bar', tabindex: 0, 'aria-label': `${it.label}: ${fmt(it.value)} (${Math.round(it.value * 1000 / total) / 10}%)` });
+        const path = svg('path', { d, fill: it.color || PALETTE[i % PALETTE.length], stroke: 'rgba(255,255,255,.85)', 'stroke-width': 1.5, class: 'c-bar', tabindex: 0, 'aria-label': `${it.label}: ${fmt(it.value)} (${Math.round(it.value * 1000 / total) / 10}%)` });
         path.addEventListener('mousemove', (e) => show(e, [it.label, fmt(it.value) + ' · ' + Math.round(it.value * 1000 / total) / 10 + '%'])); path.addEventListener('mouseleave', hide); root.append(path); a0 += (it.value / total) * Math.PI * 2; });
       root.append(svg('text', { x: c, y: c + 4, 'text-anchor': 'middle', class: 'c-center' }, compact(total)));
       return root;
-    }, items.map((it, i) => ({ name: it.label + ' (' + Math.round(it.value * 1000 / total) / 10 + '%)', color: PALETTE[i % PALETTE.length] })));
+    }, items.map((it, i) => ({ name: it.label + ' (' + Math.round(it.value * 1000 / total) / 10 + '%)', color: it.color || PALETTE[i % PALETTE.length] })));
   }
 
   SS.charts = { line, bar, donut, PALETTE };
@@ -3597,7 +3763,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     },
 
     sales(r) {
-      const t = salesTrend(r), s = salesSummary(r), cats = categorySales(r), prods = productSales(r); const chg = t.change == null ? 'No sales in the previous period' : (t.change >= 0 ? '▲ ' : '▼ ') + Math.abs(t.change) + '% vs previous period';
+      const t = salesTrend(r), s = salesSummary(r), cats = categorySales(r), prods = productSales(r); const chg = t.change == null ? 'No sales in the previous period' : (t.change >= 0 ? '+' : '−') + Math.abs(t.change) + '% vs previous period';
       const methods = Object.entries(s.byMethod).map(([m, v]) => ({ label: METHOD(m), value: v }));
       return el('div', null,
         card('Sales performance', grid(stat('Revenue', num(t.revenue), chg), stat('Previous period', num(t.previousRevenue), t.previousRange[0] + ' → ' + t.previousRange[1]), stat('Sales', String(t.count), 'Previous: ' + t.previousCount), stat('Average sale', num(s.average)))),
@@ -3684,7 +3850,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       return el('div', null,
         card('Money in and out (all payment methods)', grid(stat('Received', num(c.total.in), 'Sales ' + num(c.sources.sales) + ' · customer payments ' + num(c.sources.customerPayments)), stat('Paid out', num(c.total.out), 'Refunds ' + num(c.sources.refunds) + ' · suppliers ' + num(c.sources.supplierPayments) + ' · expenses ' + num(c.sources.expenses)), stat('Net movement', signed(c.total.net)))),
         card('By payment method', table([{ key: 'method', label: 'Method', sortValue: (x) => x.method, render: (x) => METHOD(x.method) }, { key: 'in', label: 'Received', num: true, sortValue: (x) => x.in, render: (x) => num(x.in) }, { key: 'out', label: 'Paid out', num: true, sortValue: (x) => x.out, render: (x) => num(x.out) }, { key: 'net', label: 'Net', num: true, sortValue: (x) => x.net, render: (x) => signed(x.net) }], c.methods.map((m) => Object.assign({ id: m.method }, m)), 'No money moved in this period')),
-        card('Money in and out by day', SS.charts.bar({ labels: c.daily.map((d) => d.date.slice(5)), series: [{ name: 'Received', values: c.daily.map((d) => d.in), color: '#27856A' }, { name: 'Paid out', values: c.daily.map((d) => d.out), color: '#D65353' }], label: 'Money received and paid out by day' })),
+        card('Money in and out by day', SS.charts.bar({ labels: c.daily.map((d) => d.date.slice(5)), series: [{ name: 'Received', values: c.daily.map((d) => d.in), color: '#34D399' }, { name: 'Paid out', values: c.daily.map((d) => d.out), color: '#FB7185' }], label: 'Money received and paid out by day' })),
         card('By day', table([{ key: 'date', label: 'Date', sortValue: (x) => x.date }, { key: 'in', label: 'Received', num: true, sortValue: (x) => x.in, render: (x) => num(x.in) }, { key: 'out', label: 'Paid out', num: true, sortValue: (x) => x.out, render: (x) => num(x.out) }, { key: 'net', label: 'Net', num: true, sortValue: (x) => x.net, render: (x) => signed(x.net) }], c.daily.map((d) => Object.assign({ id: d.date }, d)), 'No money moved in this period', 15)),
         el('p', { class: 'small muted' }, 'Cash drawer only (matches Cash Management): received ' + num(o.in) + ', paid out ' + num(o.out) + ', net ' + signed(o.net) + '. KBZPay, WavePay, bank etc. are not in the drawer.'));
     },
@@ -4265,23 +4431,52 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
   }
 
   const empty = (title, hint) => el('div', { class: 'empty' }, el('strong', null, title), hint || '');
-  function card(title, body, cls) { return el('section', { class: 'card ' + (cls || '') }, el('div', { class: 'card-head' }, el('h2', null, title)), body); }
+  function card(title, body, cls, sub) { return el('section', { class: 'card ' + (cls || '') }, el('div', { class: 'card-head' }, el('h2', null, title), sub ? el('span', { class: 'sub' }, sub) : null), body); }
   function stat(label, value, hint, accent) {
     return el('div', { class: 'card stat' + (accent ? ' accent' : '') }, el('div', { class: 'label' }, label), el('div', { class: 'value' }, value), hint ? el('div', { class: 'hint' }, hint) : null);
   }
   const list = (items) => el('ul', { class: 'list' }, items);
 
+  /* ---------- V2 dashboard: KPI cards + charts, all computed from stored records ---------- */
+  function scanSales(from, to) {
+    const daily = {};
+    SS.storage.read('sales').forEach((s) => {
+      if (s.status !== 'completed') return;
+      const k = dayKey(s.createdAt); if (k < from || k > to) return;
+      const n = SS.sales.net(s); const d = daily[k] || (daily[k] = { rev: 0, cogs: 0, count: 0 });
+      d.rev += n.revenue; d.cogs += n.cogs; d.count++;
+    });
+    return daily;
+  }
+  function sumDays(daily, from, to) {
+    const o = { rev: 0, cogs: 0, count: 0 };
+    Object.keys(daily).forEach((k) => { if (k >= from && k <= to) { o.rev += daily[k].rev; o.cogs += daily[k].cogs; o.count += daily[k].count; } });
+    return o;
+  }
+  const icon = (n, s) => SS.icons.make(n, s || 24);
+  function kpi(o) {
+    return el('div', { class: 'kpi tone-' + (o.tone || 'green') },
+      el('div', { class: 'kpi-top' }, el('span', { class: 'kpi-label' }, o.label), el('span', { class: 'kpi-ico' }, icon(o.icon, 24))),
+      el('div', { class: 'kpi-value' }, o.value), el('div', { class: 'kpi-foot' }, o.foot || null));
+  }
+  function trendBadge(cur, prev) {
+    if (prev > 0) {
+      const pct = Math.round((cur - prev) * 100 / prev);
+      return [el('span', { class: 'trend ' + (pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat') }, icon(pct < 0 ? 'trending-down' : 'trending-up', 14), Math.abs(pct) + '%'), el('span', null, 'vs yesterday')];
+    }
+    return [];
+  }
+  const unlockBtn = (text) => el('button', { class: 'btn sm', type: 'button', onclick: () => SS.privacy.requestUnlock().then((ok) => ok && SS.app.refresh()) }, text);
+
   function render(root) {
     const m = compute();
+    const today = dayKey(Date.now()), monthStart = today.slice(0, 8) + '01';
+    const scanFrom = monthStart < addDays(today, -55) ? monthStart : addDays(today, -55);
+    const daily = scanSales(scanFrom, today);
+    const tdy = sumDays(daily, today, today), yst = sumDays(daily, addDays(today, -1), addDays(today, -1)), mon = sumDays(daily, monthStart, today);
+    const unlocked = SS.privacy.canViewCost();
     const cost = inventoryCostValue();
     const periodLabel = state.preset === 'today' ? "Today's" : 'Period';
-    const costBody = cost == null
-      ? el('div', { class: 'value' }, el('span', { class: 'mask' }, '••••••'))
-      : el('div', { class: 'value' }, formatMMK(cost));
-    const costCard = el('div', { class: 'card stat' }, el('div', { class: 'label' }, 'Inventory cost value'), costBody,
-      el('div', { class: 'hint' }, cost == null
-        ? el('button', { class: 'btn sm', type: 'button', onclick: () => SS.privacy.requestUnlock().then((ok) => ok && SS.app.refresh()) }, 'Show (admin PIN)')
-        : el('button', { class: 'btn sm', type: 'button', onclick: () => { SS.privacy.lock(); SS.app.refresh(); } }, 'Hide')));
 
     const presets = [['today', 'today'], ['yesterday', 'yesterday'], ['last7', 'last7'], ['last30', 'last30'], ['this_month', 'this_month'], ['prev_month', 'prev_month'], ['custom', 'custom']];
     const filters = el('div', { class: 'filters', role: 'group', 'aria-label': 'Date range' },
@@ -4290,35 +4485,79 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       el('input', { class: 'input', type: 'date', value: m.range[0], 'aria-label': 'From', style: 'width:auto', onchange: (e) => { state.from = e.target.value; SS.app.refresh(); } }),
       el('input', { class: 'input', type: 'date', value: m.range[1], 'aria-label': 'To', style: 'width:auto', onchange: (e) => { state.to = e.target.value; SS.app.refresh(); } })) : null;
 
-    // sales trend
-    const days = []; { let d = m.range[0]; let n = 0; while (d <= m.range[1] && n < 62) { days.push(d); d = addDays(d, 1); n++; } }
-    const max = Math.max(1, ...days.map((d) => m.daily[d] || 0));
-    const hasSales = Object.keys(m.daily).length > 0;
-    const trend = hasSales ? SS.charts.bar({ labels: days.map((d) => d.slice(5)), series: [{ name: 'Revenue', values: days.map((d) => m.daily[d] || 0) }], label: 'Sales trend' }) : empty('No sales in this period', 'Completed sales will appear here.');
 
-    const catMax = Math.max(1, ...m.catSales.map((c) => c.value));
-    const cats = m.catSales.length ? SS.charts.donut({ items: m.catSales.slice(0, 6).map((c) => ({ label: c.name, value: c.value })), label: 'Sales by category' }) : empty('No category sales yet');
-    void catMax;
+    /* KPI cards */
+    const kpis = el('div', { class: 'kpi-grid' },
+      kpi({ label: 'Total products', value: formatNumber(m.productCount), icon: 'package', tone: 'purple', foot: el('span', null, formatNumber(m.stockUnits) + ' units in stock') }),
+      kpi({ label: 'Total stock value', value: formatMMK(m.retailValue), icon: 'layers', tone: 'blue',
+        foot: cost == null ? [el('span', null, 'Retail value'), unlockBtn('Show cost (admin PIN)')]
+          : [el('span', null, 'Cost value'), el('strong', null, formatMMK(cost)), el('button', { class: 'btn sm', type: 'button', onclick: () => { SS.privacy.lock(); SS.app.refresh(); } }, 'Hide')] }),
+      kpi({ label: "Today's sales", value: formatMMK(tdy.rev), icon: 'shopping-cart', tone: 'green', foot: [trendBadge(tdy.rev, yst.rev), el('span', null, formatNumber(tdy.count) + ' sale(s)')] }),
+      kpi({ label: 'Monthly sales', value: formatMMK(mon.rev), icon: 'calendar-days', tone: 'violet', foot: el('span', null, formatNumber(mon.count) + ' sale(s) this month') }),
+      kpi({ label: 'Total profit', value: unlocked ? formatMMK(m.gross) : el('span', { class: 'mask' }, '••••••'), icon: 'circle-dollar', tone: 'mint',
+        foot: unlocked ? el('span', null, periodLabel + ' gross profit') : [el('span', null, '— hidden —'), unlockBtn('Unlock (admin PIN)')] }),
+      kpi({ label: 'Low stock products', value: formatNumber(m.lowStock.length + m.outOfStock.length), icon: 'triangle-alert', tone: 'coral',
+        foot: [el('span', null, formatNumber(m.outOfStock.length) + ' out of stock'), el('a', { href: '#/inventory', class: 'link-btn' }, 'View inventory')] }));
 
+    /* Period summary (follows the date filter above) */
+    const summary = el('section', { class: 'card', style: 'margin-bottom:16px' }, el('div', { class: 'card-head' }, el('h2', null, 'Period summary'), el('span', { class: 'sub' }, m.range[0] === m.range[1] ? m.range[0] : m.range[0] + ' → ' + m.range[1])),
+      el('div', { class: 'stat-grid' },
+        stat(periodLabel + ' sales', formatMMK(m.revenue), 'Revenue (net of discounts)', true),
+        stat(periodLabel + ' gross profit', unlocked ? formatMMK(m.gross) : '— hidden —', unlocked ? 'Revenue − cost of goods sold' : 'Needs the admin PIN (Reports → Profit)'),
+        stat(periodLabel + ' expenses', formatMMK(m.expenses), 'Operating expenses only'),
+        stat(periodLabel + ' operating profit (est.)', unlocked ? formatMMK(m.operating) : '— hidden —', unlocked ? 'Gross profit − expenses' : 'Needs the admin PIN (Reports → Profit)')));
+
+    /* Sales overview: the selected period (a single day shows the 7 days up to it) */
+    let end = m.range[1], start = m.range[0];
+    if (start === end) start = addDays(end, -6);
+    const days = []; { let d = start; let n = 0; while (d <= end && n < 62) { days.push(d); d = addDays(d, 1); n++; } }
+    const revOn = (d) => (m.daily[d] != null ? m.daily[d] : (daily[d] ? daily[d].rev : 0));
+    const hasSales = days.some((d) => revOn(d) > 0);
+    const overview = hasSales ? SS.charts.bar({ labels: days.map((d) => d.slice(5)), series: [{ name: 'Revenue', values: days.map(revOn) }], label: 'Sales overview' }) : empty('No sales in this period', 'Completed sales will appear here.');
+
+    const cats = m.catSales.length ? SS.charts.donut({ items: m.catSales.slice(0, 6).map((c) => ({ label: c.name, value: c.value })), label: 'Product category distribution' }) : empty('No category sales yet');
+
+    /* Revenue trends: last 30 days */
+    const d30 = []; for (let i = 29; i >= 0; i--) d30.push(addDays(today, -i));
+    const has30 = d30.some((d) => daily[d] && daily[d].rev > 0);
+    const trendSeries = [{ name: 'Revenue', values: d30.map((d) => (daily[d] ? daily[d].rev : 0)), color: '#8B5CF6' }];
+    if (unlocked) trendSeries.push({ name: 'Gross profit', values: d30.map((d) => (daily[d] ? daily[d].rev - daily[d].cogs : 0)), color: '#60A5FA' });
+    const trends = has30 ? SS.charts.line({ labels: d30.map((d) => d.slice(5)), series: trendSeries, label: 'Revenue trends' }) : empty('No sales in the last 30 days');
+
+    /* Profit analysis: last 8 weeks (needs the admin PIN because it uses purchase costs) */
+    let profit;
+    if (!unlocked) {
+      profit = el('div', { class: 'locked' }, el('span', { class: 'lk' }, icon('lock', 22)), el('strong', null, 'Profit figures are hidden'), el('span', { class: 'small' }, 'Needs the admin PIN (Reports → Profit)'), unlockBtn('Unlock (admin PIN)'));
+    } else {
+      const weeks = [];
+      for (let i = 7; i >= 0; i--) { const to = addDays(today, -7 * i), from = addDays(to, -6); const w = sumDays(daily, from, to); weeks.push({ label: from.slice(5), rev: w.rev, profit: w.rev - w.cogs }); }
+      profit = weeks.some((w) => w.rev > 0) ? SS.charts.bar({ labels: weeks.map((w) => w.label), series: [{ name: 'Revenue', values: weeks.map((w) => w.rev), color: '#60A5FA' }, { name: 'Gross profit', values: weeks.map((w) => w.profit), color: '#34D399' }], label: 'Profit analysis by week' }) : empty('No sales in the last 8 weeks');
+    }
+
+    /* Best sellers, stock levels */
+    const bestMax = Math.max(1, ...m.best.map((b) => b.qty));
+    const best = m.best.length ? el('ul', { class: 'hbar-list' }, m.best.map((b) => el('li', { class: 'hbar' },
+      el('div', { class: 'hb-top' }, el('span', null, b.name), el('span', { class: 'num' }, formatNumber(b.qty) + ' sold')),
+      el('div', { class: 'hb-track' }, el('div', { class: 'hb-fill', style: 'width:' + Math.max(4, Math.round(b.qty * 100 / bestMax)) + '%' }))))) : empty('No sales yet');
+    const healthy = Math.max(0, m.productCount - m.lowStock.length - m.outOfStock.length);
+    const stockLevels = m.productCount ? SS.charts.donut({ items: [{ label: 'In stock', value: healthy, color: '#34D399' }, { label: 'Low stock', value: m.lowStock.length, color: '#FBBF24' }, { label: 'Out of stock', value: m.outOfStock.length, color: '#FB7185' }], format: (v) => formatNumber(v) + ' products', label: 'Stock level overview' }) : empty('No products yet');
     const pl = (arr, fmt, emptyTitle, emptyHint) => arr.length ? list(arr.map(fmt)) : empty(emptyTitle, emptyHint);
+    const lowOut = m.lowStock.length || m.outOfStock.length
+      ? list(m.lowStock.slice(0, 5).map((p) => el('li', null, el('span', null, p.name), el('span', { class: 'badge warning' }, formatNumber(p.stock) + ' left')))
+        .concat(m.outOfStock.slice(0, 5).map((p) => el('li', null, el('span', null, p.name), el('span', { class: 'badge danger' }, 'Out')))))
+      : empty('Nothing running low', 'No out-of-stock products');
 
     root.append(
       el('div', { class: 'page-head' }, el('div', null, el('h1', null, t('dashboard')), el('p', null, `${SS.settings.get().shopName} · ${SS.utils.formatDate(Date.now())}`)), el('div', null, filters, custom)),
+      kpis, summary,
       el('div', { class: 'grid' },
-        el('div', { class: 'col-3' }, stat('Total products', formatNumber(m.productCount))),
-        el('div', { class: 'col-3' }, stat('Total stock units', formatNumber(m.stockUnits))),
-        el('div', { class: 'col-3' }, costCard),
-        el('div', { class: 'col-3' }, stat('Inventory retail value', formatMMK(m.retailValue))),
-        el('div', { class: 'col-3' }, stat(periodLabel + ' sales', formatMMK(m.revenue), 'Revenue (net of discounts)', true)),
-        el('div', { class: 'col-3' }, stat(periodLabel + ' gross profit', SS.privacy.canViewCost() ? formatMMK(m.gross) : '— hidden —', SS.privacy.canViewCost() ? 'Revenue − cost of goods sold' : 'Needs the admin PIN (Reports → Profit)')),
-        el('div', { class: 'col-3' }, stat(periodLabel + ' expenses', formatMMK(m.expenses), 'Operating expenses only')),
-        el('div', { class: 'col-3' }, stat(periodLabel + ' operating profit (est.)', SS.privacy.canViewCost() ? formatMMK(m.operating) : '— hidden —', SS.privacy.canViewCost() ? 'Gross profit − expenses' : 'Needs the admin PIN')),
-
-        el('div', { class: 'col-8' }, card('Sales trend', trend)),
-        el('div', { class: 'col-4' }, card('Sales by category', cats)),
-        el('div', { class: 'col-4' }, card('Best-selling products', pl(m.best, (b) => el('li', null, el('span', null, b.name), el('span', { class: 'num' }, formatNumber(b.qty) + ' sold')), 'No sales yet'))),
-        el('div', { class: 'col-4' }, card('Low stock', pl(m.lowStock.slice(0, 6), (p) => el('li', null, el('span', null, p.name), el('span', { class: 'badge warning' }, formatNumber(p.stock) + ' left')), 'Nothing running low'))),
-        el('div', { class: 'col-4' }, card('Out of stock', pl(m.outOfStock.slice(0, 6), (p) => el('li', null, el('span', null, p.name), el('span', { class: 'badge danger' }, 'Out')), 'No out-of-stock products'))),
+        el('div', { class: 'col-8' }, card('Sales overview', overview, '', start === end ? start : start + ' → ' + end)),
+        el('div', { class: 'col-4' }, card('Product category distribution', cats)),
+        el('div', { class: 'col-6' }, card('Revenue trends', trends, '', 'Last 30 days')),
+        el('div', { class: 'col-6' }, card('Profit analysis', profit, '', 'Last 8 weeks')),
+        el('div', { class: 'col-4' }, card('Best-selling products', best)),
+        el('div', { class: 'col-4' }, card('Stock level overview', stockLevels)),
+        el('div', { class: 'col-4' }, card('Low & out of stock', lowOut)),
         el('div', { class: 'col-6' }, card('Recent transactions', pl(m.recentSales, (s) => el('li', null, el('span', null, (s.number || s.id) + ' · ' + SS.utils.formatDate(s.createdAt, true)), el('span', { class: 'num' }, formatMMK(s.total))), 'No transactions yet'))),
         el('div', { class: 'col-6' }, card('Recent inventory movements', pl(m.recentMoves, (mv) => el('li', null, el('span', null, mv.type + ' · ' + SS.utils.formatDate(mv.createdAt, true)), el('span', { class: 'num' }, (mv.quantity > 0 ? '+' : '') + formatNumber(mv.quantity))), 'No stock movements yet'))),
         el('div', { class: 'col-6' }, card('Recent activity', pl(SS.audit.list({ limit: 5 }), (a) => el('li', null, el('span', null, a.actionType), el('span', { class: 'muted small' }, SS.utils.formatDate(a.timestamp, true))), 'No activity yet'))),
@@ -4330,6 +4569,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
           el('li', null, el('span', null, 'Outstanding supplier payments (payables)'), el('span', { class: 'num' }, formatMMK(m.payables)))]))))
     );
   }
+
 
   SS.dashboard = { render, compute };
 })();
@@ -4381,12 +4621,23 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
 
   // id, i18n key, icon, build phase (0 = available now)
   const ROUTES = [
-    ['dashboard', 'dashboard', '▦', 0], ['products', 'products', '▣', 2], ['categories', 'categories', '☰', 2],
-    ['inventory', 'inventory', '⬒', 2], ['stocktake', 'stocktake', '✓', 2], ['sales', 'sales', '◉', 3],
-    ['purchases', 'purchases', '⇩', 4], ['suppliers', 'suppliers', '⚑', 4], ['customers', 'customers', '☺', 4],
-    ['expenses', 'expenses', '⊖', 4], ['cash', 'cash', '◎', 4], ['reports', 'reports', '▤', 6],
-    ['notifications', 'notifications', '✉', 6], ['activity', 'activity', '↺', 0], ['backup', 'backup', '⇄', 7], ['settings', 'settings', '⚙', 0]
+    ['dashboard', 'dashboard', 'layout-dashboard', 0], ['products', 'products', 'package', 2], ['categories', 'categories', 'tags', 2],
+    ['inventory', 'inventory', 'boxes', 2], ['stocktake', 'stocktake', 'clipboard-check', 2], ['sales', 'sales', 'store', 3],
+    ['purchases', 'purchases', 'shopping-bag', 4], ['suppliers', 'suppliers', 'truck', 4], ['customers', 'customers', 'users', 4],
+    ['expenses', 'expenses', 'wallet', 4], ['cash', 'cash', 'banknote', 4], ['reports', 'reports', 'chart-column', 6],
+    ['notifications', 'notifications', 'bell', 6], ['activity', 'activity', 'history', 0], ['backup', 'backup', 'database-backup', 7], ['settings', 'settings', 'settings', 0]
   ];
+  // sidebar groups: [group title, [route id, label (i18n key or phrase), icon, sub-route]]
+  const NAV = [
+    ['Overview', [['dashboard', 'dashboard', 'layout-dashboard']]],
+    ['Catalog', [['products', 'products', 'package'], ['categories', 'categories', 'tags'], ['inventory', 'inventory', 'boxes'], ['stocktake', 'stocktake', 'clipboard-check']]],
+    ['Trade', [['sales', 'Point of sale', 'store', 'pos'], ['sales', 'Sales history', 'shopping-cart', 'history'], ['purchases', 'purchases', 'shopping-bag'], ['suppliers', 'suppliers', 'truck'], ['customers', 'customers', 'users']]],
+    ['Finance', [['expenses', 'expenses', 'wallet'], ['cash', 'cash', 'banknote'], ['reports', 'reports', 'chart-column']]],
+    ['System', [['notifications', 'notifications', 'bell'], ['activity', 'activity', 'history'], ['backup', 'backup', 'database-backup'], ['settings', 'settings', 'settings']]]
+  ];
+  const label = (k) => { const v = t(k); return v === k ? SS.i18n.tr(k) : v; };
+  const icon = (n, s) => SS.icons.make(n, s || 20);
+  function setIcon(target, name, size) { const holder = target.querySelector('.nav-ico') || target; const old = holder.querySelector('svg'); const n = icon(name, size); if (old) old.replaceWith(n); else holder.prepend(n); }
   const PHASE_NOTES = {
     2: 'Products, categories, barcode, stock movements, stocktake and price history',
     3: 'POS, cart, discounts, payments, receipts and refunds',
@@ -4404,12 +4655,52 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     return n > 0 ? el('span', { class: 'nav-badge', 'aria-label': n + ' unread' }, n > 99 ? '99+' : String(n)) : null;
   }
 
+  const subOf = (id, sub) => (id === 'sales' ? (routeArg === 'history' ? 'history' : 'pos') === sub : true);
   function renderNav() {
     const nav = clear(document.getElementById('nav'));
-    ROUTES.forEach(([id, key, ico]) => {
-      nav.append(el('a', { href: '#/' + id, 'aria-current': id === current ? 'page' : null, class: id === current ? 'active' : '' },
-        el('span', { class: 'nav-ico', 'aria-hidden': 'true' }, ico), el('span', { class: 'nav-label' }, t(key)), id === 'notifications' ? navBadge() : null));
+    NAV.forEach(([group, items]) => {
+      nav.append(el('div', { class: 'nav-group-title' }, group));
+      items.forEach(([id, key, ico, sub]) => {
+        const on = id === current && (!sub || subOf(id, sub)); const text = label(key);
+        nav.append(el('a', { href: sub === 'history' ? '#/sales/history' : '#/' + id, 'data-k': id + (sub || ''), title: text, 'aria-current': on ? 'page' : null, class: on ? 'active' : '' },
+          el('span', { class: 'nav-ico', 'aria-hidden': 'true' }, icon(ico, 19)), el('span', { class: 'nav-label' }, text), id === 'notifications' ? navBadge() : null));
+      });
     });
+    updateBell();
+  }
+  function renderCrumbs() {
+    const box = clear(document.getElementById('crumbs')); if (!box) return;
+    const g = NAV.find(([, items]) => items.some(([id]) => id === current)); const route = ROUTES.find((r) => r[0] === current) || ROUTES[0];
+    let leaf = label(route[1]);
+    if (current === 'sales') leaf = label(routeArg === 'history' ? 'Sales history' : 'Point of sale');
+    const parts = ['SmartStock'].concat(g && g[0] !== 'Overview' ? [g[0]] : []);
+    parts.forEach((p) => box.append(el('span', null, p), el('span', { class: 'sep' }, icon('chevron-right', 14))));
+    box.append(el('strong', { 'aria-current': 'page' }, leaf));
+  }
+  function updateBell() {
+    const dot = document.getElementById('bellDot'); if (!dot) return;
+    let n = 0; try { n = SS.notifications ? SS.notifications.unreadCount() : 0; } catch (e) { n = 0; }
+    dot.hidden = n <= 0; dot.classList.toggle('count', n > 0); dot.textContent = n > 0 ? (n > 99 ? '99+' : String(n)) : '';
+  }
+  function updateUser() {
+    let s = {}; try { s = SS.settings.get(); } catch (e) { s = {}; }
+    const name = s.shopName || 'SmartStock';
+    const n = document.getElementById('userName'); if (n) n.textContent = name;
+    const a = document.getElementById('userAvatar'); if (a) a.textContent = Array.from(name.trim())[0] || 'S';
+  }
+  function closeUserMenu() { const host = document.getElementById('userMenuHost'); if (host) clear(host); const b = document.getElementById('userBtn'); if (b) b.setAttribute('aria-expanded', 'false'); }
+  function toggleUserMenu() {
+    const host = document.getElementById('userMenuHost'); if (host.firstChild) return closeUserMenu();
+    const s = SS.settings.get(); const dark = s.theme === 'dark';
+    const link = (ico, text, href) => el('a', { href, role: 'menuitem', onclick: closeUserMenu }, icon(ico, 17), text);
+    const act = (ico, text, fn) => el('button', { type: 'button', role: 'menuitem', onclick: () => { closeUserMenu(); fn(); } }, icon(ico, 17), text);
+    host.append(el('div', { class: 'dropdown', role: 'menu' },
+      el('div', { class: 'dd-head' }, el('span', { class: 'avatar' }, Array.from((s.shopName || 'S').trim())[0] || 'S'), el('div', null, el('strong', null, s.shopName || 'SmartStock'), el('span', { class: 'sub' }, s.operatorLabel || ''))),
+      link('settings', label('settings'), '#/settings'), link('database-backup', label('backup'), '#/backup'), link('history', label('activity'), '#/activity'),
+      act('circle-help', 'Keyboard shortcuts', openHelp),
+      act(dark ? 'sun' : 'moon', dark ? 'Switch to light mode' : 'Switch to dark mode', () => document.getElementById('themeBtn').click())));
+    document.getElementById('userBtn').setAttribute('aria-expanded', 'true');
+    const first = host.querySelector('a,button'); if (first) first.focus();
   }
 
   function pendingPage(root, route) {
@@ -4470,7 +4761,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     if (next !== current) SS.privacy.lock();   // cost prices re-hide when leaving the view
     SS.barcode.clearScan();
     current = next;
-    closeDrawer(); renderNav(); render();
+    closeDrawer(); renderNav(); renderCrumbs(); updateUser(); closeUserMenu(); render();
     if (routed) main().focus({ preventScroll: true });   // first load keeps focus at the top so the skip link is the first Tab stop
     routed = true;
   }
@@ -4480,13 +4771,18 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const s = SS.settings.get();
     document.documentElement.setAttribute('data-theme', s.theme);
     const app = document.getElementById('app'); app.classList.toggle('collapsed', !!s.sidebarCollapsed);
+    setIcon(document.getElementById('themeBtn'), s.theme === 'dark' ? 'sun' : 'moon', 19);
+    document.getElementById('themeBtn').setAttribute('aria-label', s.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    const cb = document.getElementById('collapseBtn'); setIcon(cb, s.sidebarCollapsed ? 'panel-left-open' : 'panel-left-close', 19);
+    cb.setAttribute('aria-label', s.sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'); cb.title = cb.getAttribute('aria-label');
   }
   function closeDrawer() { document.getElementById('app').classList.remove('drawer-open'); document.getElementById('scrim').hidden = true; }
   function updateStatic() {
     document.querySelectorAll('[data-i18n]').forEach((n) => { n.textContent = t(n.dataset.i18n); });
     const net = document.getElementById('netStatus');
     net.textContent = navigator.onLine ? t('online') : t('offline'); net.classList.toggle('offline', !navigator.onLine);
-    document.getElementById('langBtn').textContent = SS.i18n.getLang() === 'my' ? 'EN' : 'မြန်';
+    document.querySelectorAll('#langSeg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === SS.i18n.getLang())));
+    renderCrumbs(); updateUser(); updateBell();
     SS.i18n.applyStatic(document.body);
     document.title = SS.i18n.getLang() === 'my' ? 'SmartStock — ကုန်ပစ္စည်းစီမံခန့်ခွဲမှု' : 'SmartStock';
   }
@@ -4526,7 +4822,12 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     document.getElementById('menuBtn').addEventListener('click', () => { document.getElementById('app').classList.add('drawer-open'); document.getElementById('scrim').hidden = false; });
     document.getElementById('scrim').addEventListener('click', closeDrawer);
     document.getElementById('themeBtn').addEventListener('click', () => { SS.settings.patch({ theme: SS.settings.get().theme === 'dark' ? 'light' : 'dark' }); applyTheme(); });
-    document.getElementById('langBtn').addEventListener('click', () => { const l = SS.i18n.getLang() === 'my' ? 'en' : 'my'; SS.i18n.setLang(l); SS.settings.patch({ language: l }); updateStatic(); renderNav(); render(); });
+    document.getElementById('langSeg').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-lang]'); if (!b || b.dataset.lang === SS.i18n.getLang()) return;
+      const l = b.dataset.lang; SS.i18n.setLang(l); SS.settings.patch({ language: l }); updateStatic(); renderNav(); render();
+    });
+    document.getElementById('userBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleUserMenu(); });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.user-wrap')) closeUserMenu(); });
     document.getElementById('searchBtn').addEventListener('click', openSearch);
     document.getElementById('helpBtn').addEventListener('click', openHelp);
     window.addEventListener('hashchange', route);
@@ -4534,6 +4835,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     if (skip) skip.addEventListener('click', (e) => { e.preventDefault(); main().focus(); });
     window.addEventListener('online', updateStatic); window.addEventListener('offline', updateStatic);
     document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('userMenuHost').firstChild) { closeUserMenu(); return document.getElementById('userBtn').focus(); }
       if (e.key === 'Escape' && document.querySelector('.modal')) return SS.utils.closeModal();
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
@@ -4569,8 +4871,10 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
   }
 
   async function start() {
+    document.querySelectorAll('[data-icon]').forEach((n) => n.prepend(SS.icons.make(n.dataset.icon, Number(n.dataset.size) || 18)));
     SS.i18n.setLang('en'); SS.i18n.applyStatic(document.body);   // remember the original English of the static shell before translating it
     const res = await SS.storage.init();
+    clear(document.getElementById('main'));
     const q = new URLSearchParams(location.search).get('lang');   // ?lang=en|my overrides the saved language (for this load only)
     let saved = 'my'; try { saved = SS.settings.get().language; } catch (e) { /* storage failed: keep the default */ }
     SS.i18n.setLang(q === 'en' || q === 'my' ? q : saved);

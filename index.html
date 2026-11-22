@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SmartStock</title>
   <meta name="description" content="SmartStock — offline-first retail inventory management">
+  <meta name="theme-color" content="#16A36A">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#14243A">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="print.css" media="print">
+  <link rel="stylesheet" href="print.css" media="print">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -18,33 +23,39 @@
   <div class="app" id="app">
     <aside class="sidebar" id="sidebar" aria-label="Main navigation">
       <div class="brand">
-        <span class="brand-mark" aria-hidden="true">S</span>
-        <span class="brand-name">SmartStock</span>
+        <span class="brand-mark" aria-hidden="true" data-icon="package" data-size="20"></span>
+        <span class="brand-text"><span class="brand-name">SmartStock</span><span class="brand-sub">Inventory &amp; POS</span></span>
       </div>
       <nav class="nav" id="nav"></nav>
       <div class="sidebar-foot">
-        <button class="nav-collapse" id="collapseBtn" type="button" aria-label="Collapse sidebar">«</button>
+        <button class="nav-collapse" id="collapseBtn" type="button" aria-label="Collapse sidebar"><span class="nav-ico"></span><span class="nav-label">Collapse</span></button>
       </div>
     </aside>
     <div class="scrim" id="scrim" hidden></div>
 
     <div class="content-wrap">
       <header class="topbar">
-        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">☰</button>
-        <button class="search-trigger" id="searchBtn" type="button">
-          <span aria-hidden="true">⌕</span>
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" data-icon="menu" data-size="21"></button>
+        <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+        <button class="search-trigger" id="searchBtn" type="button" aria-label="Search">
+          <span data-icon="search" data-size="17" style="display:inline-grid"></span>
           <span data-i18n="search_placeholder">Search…</span>
           <kbd>Ctrl K</kbd>
         </button>
         <div class="topbar-right">
           <button class="status-pill save-pill" id="saveState" type="button" hidden aria-live="polite"></button>
-          <span class="status-pill" id="netStatus" role="status"></span>
-          <button class="icon-btn" id="langBtn" type="button" aria-label="Language">မြန်</button>
-          <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle theme">◐</button>
-          <button class="icon-btn" id="helpBtn" type="button" aria-label="Keyboard shortcuts">?</button>
+          <span class="status-pill net-label" id="netStatus" role="status"></span>
+          <div class="seg" id="langSeg" role="group" aria-label="Language"><button type="button" data-lang="my" aria-pressed="false">မြန်</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+          <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle theme"></button>
+          <button class="icon-btn help-btn" id="helpBtn" type="button" aria-label="Keyboard shortcuts" data-icon="circle-help" data-size="19"></button>
+          <a class="icon-btn" id="bellBtn" href="#/notifications" aria-label="Notifications"><span data-icon="bell" data-size="19" style="display:inline-grid"></span><span class="bell-dot" id="bellDot" hidden></span></a>
+          <div class="user-wrap">
+            <button class="user-btn" id="userBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Account menu"><span class="avatar" id="userAvatar">S</span><span class="user-name" id="userName"></span><span data-icon="chevron-down" data-size="15" style="display:inline-grid;color:var(--text-2)"></span></button>
+            <div id="userMenuHost"></div>
+          </div>
         </div>
       </header>
-      <main id="main" class="main" tabindex="-1"></main>
+      <main id="main" class="main" tabindex="-1"><div class="loading"><span class="spinner" role="status" aria-label="Loading"></span></div></main>
     </div>
   </div>
 
