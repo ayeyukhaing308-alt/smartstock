@@ -422,10 +422,9 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
 :root { --ease-out: cubic-bezier(.22, 1, .36, 1); --dur-1: .14s; --dur-2: .22s; --dur-3: .44s; }
 
 /* ---- 1. Page / dashboard entrance (classes are added by SS.motion.enter() on navigation only) ---- */
-@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
 @keyframes riseSm { from { opacity: 0; transform: translateY(6px); } }
-.m-in { animation: rise var(--dur-3) var(--ease-out) var(--d, 0ms) backwards; }
-.m-row { animation: riseSm .34s var(--ease-out) var(--d, 0ms) backwards; }
+.m-in { animation: rise .3s var(--ease-out) var(--d, 0ms) backwards; }
 .loading { animation: fadeIn .2s ease .15s backwards; }
 
 /* thin route progress bar */
@@ -433,31 +432,28 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
 .route-bar.run { animation: routeBar .6s var(--ease-out); }
 @keyframes routeBar { 0% { transform: scaleX(0); opacity: 1; } 65% { transform: scaleX(.88); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
 
-/* topbar: soft shadow appears once the page scrolls */
-.topbar { transition: box-shadow var(--dur-2) ease; }
-.topbar.scrolled { box-shadow: 0 6px 18px rgba(32, 37, 54, .07); }
-[data-theme="dark"] .topbar.scrolled { box-shadow: 0 6px 18px rgba(0, 0, 0, .35); }
+/* performance: blur layers are the most expensive thing on tablets, so the sticky bar and modal backdrop are solid */
+.topbar { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.modal-back { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(20, 23, 38, .55); }
+.modal, .dropdown { box-shadow: 0 14px 36px rgba(20, 23, 38, .2); }
+[data-theme="dark"] .modal, [data-theme="dark"] .dropdown { box-shadow: 0 14px 36px rgba(0, 0, 0, .5); }
 
 /* ---- 2. Cards: lift, shadow, press ---- */
 .kpi, .stat-grid .stat, .pos-tile, .notif { will-change: auto; }
 .kpi:active, .stat-grid .stat:active { transform: translateY(0) scale(.992); transition-duration: .08s; }
 .pos-tile:active:not(:disabled) { transition-duration: .08s; }
-.kpi-ico { transition: transform var(--dur-2) var(--ease-out); }
-.kpi:hover .kpi-ico { transform: scale(1.08) rotate(-3deg); }
 
 /* ---- 3. Sidebar ---- */
-.sidebar { transition: width .3s var(--ease-out), transform .3s var(--ease-out), box-shadow .3s ease; }
-.content-wrap { transition: margin .3s var(--ease-out); }
-.brand { transition: gap .3s var(--ease-out), padding .3s var(--ease-out); }
-.brand-text { max-width: 190px; transition: opacity .2s ease, max-width .3s var(--ease-out); }
-.nav-label { max-width: 230px; transition: opacity .2s ease, max-width .3s var(--ease-out); }
-.nav a { z-index: 1; transition: background var(--t), color var(--t), gap .3s var(--ease-out), transform .12s var(--ease-out); }
+.sidebar { transition: width .26s var(--ease-out), transform .28s var(--ease-out), box-shadow .28s ease; }
+.content-wrap { transition: none; }
+.brand-text { max-width: 190px; transition: opacity .18s ease; }
+.nav-label { max-width: 230px; transition: opacity .18s ease; }
+.nav a { z-index: 1; transition: background var(--t), color var(--t), transform .12s var(--ease-out); }
 .nav a:active { transform: scale(.98); }
 .nav a.active:hover { background: transparent; }
-.nav-collapse { transition: background var(--t), color var(--t), gap .3s var(--ease-out); }
 .nav-collapse svg { animation: iconSwap .3s var(--ease-out); }
 @keyframes iconSwap { from { opacity: 0; transform: scale(.6) rotate(-20deg); } }
-.nav-pill { position: absolute; left: 12px; right: 12px; top: 0; border-radius: 10px; background: var(--green-soft); pointer-events: none; will-change: transform; transition: transform .38s var(--ease-out), height .2s ease; }
+.nav-pill { position: absolute; left: 12px; right: 12px; top: 0; border-radius: 10px; background: var(--green-soft); pointer-events: none; will-change: transform; transition: transform .3s var(--ease-out); }
 .nav-pill::before { content: ""; position: absolute; left: -12px; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0; background: var(--green); }
 
 /* ---- 4. Dropdown, modal, toast, tooltip ---- */
@@ -465,7 +461,6 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
 @keyframes popOut { to { opacity: 0; transform: scale(.97) translateY(-4px); } }
 .chart-tip { animation: tipIn .14s var(--ease-out); }
 @keyframes tipIn { from { opacity: 0; transform: translateY(4px); } }
-.toast { transition: transform var(--dur-2) var(--ease-out); }
 .bell-dot:not([hidden]) { animation: bellPop .4s var(--ease-out); }
 @keyframes bellPop { 0% { transform: scale(.3); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
 
@@ -479,10 +474,6 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
 @keyframes tabLine { from { transform: scaleX(0); } }
 #themeBtn svg { animation: spinIn .4s var(--ease-out); }
 @keyframes spinIn { from { opacity: 0; transform: rotate(-70deg) scale(.6); } }
-.icon-btn svg { transition: transform var(--dur-2) var(--ease-out); }
-.icon-btn:hover svg { transform: scale(1.06); }
-.btn svg { transition: transform var(--dur-2) var(--ease-out); }
-.btn:hover svg { transform: translateY(-1px); }
 
 /* ---- 6. Forms ---- */
 .field label { transition: color var(--t); }
@@ -497,16 +488,14 @@ input[type=checkbox], input[type=radio] { transition: transform .12s var(--ease-
 input[type=checkbox]:active, input[type=radio]:active { transform: scale(.86); }
 
 /* ---- 7. Charts (animate once, when the page is entered — hovering never redraws them) ---- */
-.chart-in .c-svg .c-bar { transform-box: fill-box; transform-origin: 50% 100%; animation: barGrow .62s var(--ease-out) calc(220ms + var(--bi, 0) * 24ms) backwards; }
+.chart-in .c-svg .c-bar { transform-box: fill-box; transform-origin: 50% 100%; animation: barGrow .5s var(--ease-out) calc(120ms + var(--bi, 0) * 14ms) backwards; }
 @keyframes barGrow { from { transform: scaleY(0); opacity: .35; } }
-.chart-in .c-donut .c-bar { transform-box: view-box; transform-origin: 50% 50%; animation: donutIn .7s var(--ease-out) calc(220ms + var(--bi, 0) * 70ms) backwards; }
-@keyframes donutIn { from { opacity: 0; transform: rotate(-28deg) scale(.9); } }
-.chart-in polyline { animation: lineDraw 1s var(--ease-out) .25s backwards; }
+.chart-in .c-donut .c-bar { transform-box: view-box; transform-origin: 50% 50%; animation: donutIn .45s var(--ease-out) calc(120ms + var(--bi, 0) * 50ms) backwards; }
+@keyframes donutIn { from { opacity: 0; } }
+.chart-in polyline { animation: lineDraw .8s var(--ease-out) .15s backwards; }
 @keyframes lineDraw { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
-.chart-in .c-area { animation: fadeIn .7s ease .55s backwards; }
-.chart-in .c-pt { animation: fadeIn .4s ease .95s backwards; }
-.chart-in .chart-legend { animation: fadeIn .5s ease .6s backwards; }
-.chart-in .hb-fill { transform-origin: left; animation: growX .7s var(--ease-out) .3s backwards; }
+.chart-in .c-area { animation: fadeIn .5s ease .5s backwards; }
+.chart-in .hb-fill { transform-origin: left; animation: growX .5s var(--ease-out) .15s backwards; }
 @keyframes growX { from { transform: scaleX(0); } }
 
 @media (max-width: 700px) {

@@ -4606,7 +4606,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const target = parseFloat(m[0].replace(/,/g, '')); if (!isFinite(target) || target === 0) return;
     const dec = m[1] ? m[1].length - 1 : 0; const pre = text.slice(0, m.index), post = text.slice(m.index + m[0].length);
     const node = el.firstChild; const fmt = (v) => v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-    const dur = 850; let start = 0;
+    const dur = 600; let start = 0;
     node.data = pre + fmt(0) + post;
     const tick = (now) => {
       if (!el.isConnected) return;
@@ -4628,17 +4628,14 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     if (!main || reduce()) return;
     routeBar();
     let i = 0; const added = [];
-    const stagger = (n) => { n.classList.add('m-in'); n.style.setProperty('--d', Math.min(i, 10) * 45 + 'ms'); i++; added.push(n);
+    const stagger = (n) => { n.classList.add('m-in'); n.style.setProperty('--d', Math.min(i, 6) * 30 + 'ms'); i++; added.push(n);
       const done = (e) => { if (e.target !== n) return; n.classList.remove('m-in'); n.removeEventListener('animationend', done); };
       n.addEventListener('animationend', done); };
     Array.from(main.children).forEach((c) => { if (GRIDS.test(c.className)) Array.from(c.children).forEach(stagger); else stagger(c); });
-    main.querySelectorAll('tbody tr').forEach((r, k) => { if (k < 12) { r.classList.add('m-row'); r.style.setProperty('--d', 140 + k * 24 + 'ms'); added.push(r); } });
-    main.querySelectorAll('.pos-tile').forEach((r, k) => { if (k < 30) { r.classList.add('m-row'); r.style.setProperty('--d', 80 + k * 18 + 'ms'); added.push(r); } });
-    main.querySelectorAll('.notif').forEach((r, k) => { if (k < 14) { r.classList.add('m-row'); r.style.setProperty('--d', 80 + k * 30 + 'ms'); added.push(r); } });
     const charts = Array.from(main.querySelectorAll('.chart, .hbar-list'));
-    charts.forEach((ch) => { ch.classList.add('chart-in'); ch.querySelectorAll('.c-bar').forEach((b, k) => b.style.setProperty('--bi', Math.min(k, 24))); });
-    main.querySelectorAll('.kpi-value, .stat .value').forEach((el, k) => countUp(el, 120 + k * 50));
-    setTimeout(() => { added.forEach((n) => n.classList.remove('m-in', 'm-row')); charts.forEach((c) => c.classList.remove('chart-in')); }, 1700);
+    charts.forEach((ch) => { ch.classList.add('chart-in'); ch.querySelectorAll('.c-bar').forEach((b, k) => b.style.setProperty('--bi', Math.min(k, 16))); });
+    main.querySelectorAll('.kpi-value').forEach((el, k) => countUp(el, 80 + k * 40));
+    setTimeout(() => { added.forEach((n) => n.classList.remove('m-in', 'm-row')); charts.forEach((c) => c.classList.remove('chart-in')); }, 1300);
   }
 
   let lastTop = null;
@@ -4653,7 +4650,6 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     lastTop = top;
   }
 
-  window.addEventListener('scroll', () => { const t = document.querySelector('.topbar'); if (t) t.classList.toggle('scrolled', window.scrollY > 4); }, { passive: true });
   SS.motion = { enter, pill, reduced: reduce };
 })();
 
