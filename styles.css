@@ -124,7 +124,7 @@ html[lang="my"] .nav-group-title { letter-spacing: 0; text-transform: none; font
 .user-btn:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
 .avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--purple-soft); color: var(--purple-deep); font-weight: 700; font-size: 13px; flex: none; text-transform: uppercase; }
 .user-name { font-size: 13px; font-weight: 600; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dropdown { position: absolute; right: 0; top: calc(100% + 8px); min-width: 250px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-lg); padding: 6px; z-index: 60; animation: pop .14s var(--ease); transform-origin: top right; }
+.dropdown { position: absolute; right: 0; top: calc(100% + 8px); min-width: 250px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-lg); padding: 6px; z-index: 60; animation: pop .22s var(--ease); transform-origin: top right; }
 .dropdown .dd-head { display: flex; gap: 10px; align-items: center; padding: 10px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
 .dropdown .dd-head strong { display: block; line-height: 1.3; } .dropdown .dd-head span.sub { color: var(--text-2); font-size: 12px; }
 .dropdown a, .dropdown button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 0; background: none; border-radius: 9px; color: var(--text); font: inherit; font-size: 13.5px; text-decoration: none; cursor: pointer; text-align: left; }
@@ -183,7 +183,7 @@ html[lang="my"] .section-title { text-transform: none; letter-spacing: 0; font-s
 .hbar .hb-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; margin-bottom: 5px; }
 .hbar .hb-top span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 550; }
 .hbar .hb-track { height: 8px; border-radius: 99px; background: var(--hover); overflow: hidden; }
-.hbar .hb-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--green), var(--green-bright)); transition: width .5s var(--ease); }
+.hbar .hb-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--green), var(--green-bright)); transition: width .75s var(--ease); }
 .hbar:nth-child(even) .hb-fill { background: linear-gradient(90deg, var(--purple), var(--purple-bright)); }
 .locked { display: grid; place-items: center; text-align: center; gap: 10px; padding: 36px 12px; color: var(--text-2); }
 .locked .lk { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--purple-soft); color: var(--purple); }
@@ -286,18 +286,18 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
 
 /* ---------- Toasts, modals ---------- */
 .toasts { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 120; pointer-events: none; }
-.toast { pointer-events: auto; display: flex; align-items: flex-start; gap: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px 12px 12px; min-width: 260px; max-width: 380px; box-shadow: var(--shadow-md); animation: toastIn .22s var(--ease); font-size: 13.5px; }
+.toast { pointer-events: auto; display: flex; align-items: flex-start; gap: 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px 12px 12px; min-width: 260px; max-width: 380px; box-shadow: var(--shadow-md); animation: toastIn .34s var(--ease); font-size: 13.5px; }
 .toast.out { animation: toastOut .2s var(--ease) forwards; }
 .toast .t-ico { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; flex: none; background: var(--info-bg); color: var(--info); }
 .toast.success .t-ico { background: var(--success-bg); color: var(--success); } .toast.warning .t-ico { background: var(--warning-bg); color: var(--warning-text); } .toast.error .t-ico { background: var(--danger-bg); color: var(--danger); }
 .toast span.t-msg { padding-top: 3px; }
-.modal-back { position: fixed; inset: 0; background: rgba(20,23,38,.5); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); display: grid; place-items: center; z-index: 100; padding: 16px; animation: fadeIn .16s ease; }
-.modal-back.closing { animation: fadeOut .14s ease forwards; } .modal-back.closing .modal { animation: modalOut .14s ease forwards; }
-.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; width: min(540px, 100%); max-height: 90vh; overflow: auto; padding: 26px; box-shadow: var(--shadow-lg); animation: modalIn .2s var(--ease); }
+.modal-back { position: fixed; inset: 0; background: rgba(20,23,38,.5); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); display: grid; place-items: center; z-index: 100; padding: 16px; animation: fadeIn .26s ease; }
+.modal-back.closing { animation: fadeOut .22s ease forwards; } .modal-back.closing .modal { animation: modalOut .22s ease forwards; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; width: min(540px, 100%); max-height: 90vh; overflow: auto; padding: 26px; box-shadow: var(--shadow-lg); animation: modalIn .32s var(--ease); }
 .modal.wide { width: min(780px, 100%); }
 .modal h2 { margin-bottom: 16px; font-size: 18px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; }
-.scrim { position: fixed; inset: 0; background: rgba(20,23,38,.5); z-index: 35; opacity: 0; pointer-events: none; transition: opacity .24s ease; }
+.scrim { position: fixed; inset: 0; background: rgba(20,23,38,.5); z-index: 35; opacity: 0; pointer-events: none; transition: opacity .38s ease; }
 .app.drawer-open .scrim { opacity: 1; pointer-events: auto; }
 .kbd-list { display: grid; grid-template-columns: auto 1fr; gap: 10px 18px; align-items: center; }
 .kbd-list kbd { border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 7px; padding: 1px 8px; background: var(--surface-2); font: 600 12px var(--font); justify-self: start; }
@@ -419,17 +419,17 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
    Rules: transform + opacity only, short durations, backwards-fill (so nothing is left overriding hover
    states), everything switched off by prefers-reduced-motion.
    ===================================================================================================== */
-:root { --ease-out: cubic-bezier(.22, 1, .36, 1); --dur-1: .14s; --dur-2: .22s; --dur-3: .44s; }
+:root { --ease-out: cubic-bezier(.22, 1, .36, 1); --dur-1: .2s; --dur-2: .32s; --dur-3: .62s; }
 
 /* ---- 1. Page / dashboard entrance (classes are added by SS.motion.enter() on navigation only) ---- */
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
 @keyframes riseSm { from { opacity: 0; transform: translateY(6px); } }
-.m-in { animation: rise .3s var(--ease-out) var(--d, 0ms) backwards; }
+.m-in { animation: rise .5s var(--ease-out) var(--d, 0ms) backwards; }
 .loading { animation: fadeIn .2s ease .15s backwards; }
 
 /* thin route progress bar */
 .route-bar { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 150; pointer-events: none; transform-origin: left; transform: scaleX(0); opacity: 0; background: linear-gradient(90deg, var(--green), var(--purple)); }
-.route-bar.run { animation: routeBar .6s var(--ease-out); }
+.route-bar.run { animation: routeBar .9s var(--ease-out); }
 @keyframes routeBar { 0% { transform: scaleX(0); opacity: 1; } 65% { transform: scaleX(.88); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
 
 /* performance: blur layers are the most expensive thing on tablets, so the sticky bar and modal backdrop are solid */
@@ -444,20 +444,20 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
 .pos-tile:active:not(:disabled) { transition-duration: .08s; }
 
 /* ---- 3. Sidebar ---- */
-.sidebar { transition: width .26s var(--ease-out), transform .28s var(--ease-out), box-shadow .28s ease; }
+.sidebar { transition: width .4s var(--ease-out), transform .42s var(--ease-out), box-shadow .4s ease; }
 .content-wrap { transition: none; }
-.brand-text { max-width: 190px; transition: opacity .18s ease; }
-.nav-label { max-width: 230px; transition: opacity .18s ease; }
+.brand-text { max-width: 190px; transition: opacity .28s ease; }
+.nav-label { max-width: 230px; transition: opacity .28s ease; }
 .nav a { z-index: 1; transition: background var(--t), color var(--t), transform .12s var(--ease-out); }
 .nav a:active { transform: scale(.98); }
 .nav a.active:hover { background: transparent; }
-.nav-collapse svg { animation: iconSwap .3s var(--ease-out); }
+.nav-collapse svg { animation: iconSwap .45s var(--ease-out); }
 @keyframes iconSwap { from { opacity: 0; transform: scale(.6) rotate(-20deg); } }
-.nav-pill { position: absolute; left: 12px; right: 12px; top: 0; border-radius: 10px; background: var(--green-soft); pointer-events: none; will-change: transform; transition: transform .3s var(--ease-out); }
+.nav-pill { position: absolute; left: 12px; right: 12px; top: 0; border-radius: 10px; background: var(--green-soft); pointer-events: none; will-change: transform; transition: transform .45s var(--ease-out); }
 .nav-pill::before { content: ""; position: absolute; left: -12px; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0; background: var(--green); }
 
 /* ---- 4. Dropdown, modal, toast, tooltip ---- */
-.dropdown.closing { animation: popOut .12s ease forwards; pointer-events: none; }
+.dropdown.closing { animation: popOut .18s ease forwards; pointer-events: none; }
 @keyframes popOut { to { opacity: 0; transform: scale(.97) translateY(-4px); } }
 .chart-tip { animation: tipIn .14s var(--ease-out); }
 @keyframes tipIn { from { opacity: 0; transform: translateY(4px); } }
@@ -470,9 +470,9 @@ th[aria-sort] .th-btn { color: var(--purple-deep); }
 .seg button { transition: background var(--t), color var(--t), box-shadow var(--t), transform .1s var(--ease-out); }
 .tab { position: relative; border-bottom-color: transparent; }
 .tab:active { transform: scale(.97); }
-.tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: var(--purple); border-radius: 2px; transform-origin: left; animation: tabLine .28s var(--ease-out); }
+.tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: var(--purple); border-radius: 2px; transform-origin: left; animation: tabLine .4s var(--ease-out); }
 @keyframes tabLine { from { transform: scaleX(0); } }
-#themeBtn svg { animation: spinIn .4s var(--ease-out); }
+#themeBtn svg { animation: spinIn .6s var(--ease-out); }
 @keyframes spinIn { from { opacity: 0; transform: rotate(-70deg) scale(.6); } }
 
 /* ---- 6. Forms ---- */
@@ -488,14 +488,14 @@ input[type=checkbox], input[type=radio] { transition: transform .12s var(--ease-
 input[type=checkbox]:active, input[type=radio]:active { transform: scale(.86); }
 
 /* ---- 7. Charts (animate once, when the page is entered — hovering never redraws them) ---- */
-.chart-in .c-svg .c-bar { transform-box: fill-box; transform-origin: 50% 100%; animation: barGrow .5s var(--ease-out) calc(120ms + var(--bi, 0) * 14ms) backwards; }
+.chart-in .c-svg .c-bar { transform-box: fill-box; transform-origin: 50% 100%; animation: barGrow .8s var(--ease-out) calc(180ms + var(--bi, 0) * 22ms) backwards; }
 @keyframes barGrow { from { transform: scaleY(0); opacity: .35; } }
-.chart-in .c-donut .c-bar { transform-box: view-box; transform-origin: 50% 50%; animation: donutIn .45s var(--ease-out) calc(120ms + var(--bi, 0) * 50ms) backwards; }
+.chart-in .c-donut .c-bar { transform-box: view-box; transform-origin: 50% 50%; animation: donutIn .7s var(--ease-out) calc(120ms + var(--bi, 0) * 50ms) backwards; }
 @keyframes donutIn { from { opacity: 0; } }
-.chart-in polyline { animation: lineDraw .8s var(--ease-out) .15s backwards; }
+.chart-in polyline { animation: lineDraw 1.2s var(--ease-out) .2s backwards; }
 @keyframes lineDraw { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
-.chart-in .c-area { animation: fadeIn .5s ease .5s backwards; }
-.chart-in .hb-fill { transform-origin: left; animation: growX .5s var(--ease-out) .15s backwards; }
+.chart-in .c-area { animation: fadeIn .7s ease .8s backwards; }
+.chart-in .hb-fill { transform-origin: left; animation: growX .8s var(--ease-out) .2s backwards; }
 @keyframes growX { from { transform: scaleX(0); } }
 
 @media (max-width: 700px) {

@@ -4606,7 +4606,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const target = parseFloat(m[0].replace(/,/g, '')); if (!isFinite(target) || target === 0) return;
     const dec = m[1] ? m[1].length - 1 : 0; const pre = text.slice(0, m.index), post = text.slice(m.index + m[0].length);
     const node = el.firstChild; const fmt = (v) => v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-    const dur = 600; let start = 0;
+    const dur = 900; let start = 0;
     node.data = pre + fmt(0) + post;
     const tick = (now) => {
       if (!el.isConnected) return;
@@ -4628,14 +4628,14 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     if (!main || reduce()) return;
     routeBar();
     let i = 0; const added = [];
-    const stagger = (n) => { n.classList.add('m-in'); n.style.setProperty('--d', Math.min(i, 6) * 30 + 'ms'); i++; added.push(n);
+    const stagger = (n) => { n.classList.add('m-in'); n.style.setProperty('--d', Math.min(i, 6) * 45 + 'ms'); i++; added.push(n);
       const done = (e) => { if (e.target !== n) return; n.classList.remove('m-in'); n.removeEventListener('animationend', done); };
       n.addEventListener('animationend', done); };
     Array.from(main.children).forEach((c) => { if (GRIDS.test(c.className)) Array.from(c.children).forEach(stagger); else stagger(c); });
     const charts = Array.from(main.querySelectorAll('.chart, .hbar-list'));
     charts.forEach((ch) => { ch.classList.add('chart-in'); ch.querySelectorAll('.c-bar').forEach((b, k) => b.style.setProperty('--bi', Math.min(k, 16))); });
-    main.querySelectorAll('.kpi-value').forEach((el, k) => countUp(el, 80 + k * 40));
-    setTimeout(() => { added.forEach((n) => n.classList.remove('m-in', 'm-row')); charts.forEach((c) => c.classList.remove('chart-in')); }, 1300);
+    main.querySelectorAll('.kpi-value').forEach((el, k) => countUp(el, 120 + k * 60));
+    setTimeout(() => { added.forEach((n) => n.classList.remove('m-in', 'm-row')); charts.forEach((c) => c.classList.remove('chart-in')); }, 2000);
   }
 
   let lastTop = null;
@@ -4733,7 +4733,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const n = document.getElementById('userName'); if (n) n.textContent = name;
     const a = document.getElementById('userAvatar'); if (a) a.textContent = Array.from(name.trim())[0] || 'S';
   }
-  function closeUserMenu() { const host = document.getElementById('userMenuHost'); if (host) { const dd = host.firstElementChild; if (dd && !(SS.motion && SS.motion.reduced())) { dd.classList.add('closing'); setTimeout(() => { if (dd.parentNode === host) dd.remove(); }, 130); } else clear(host); } const b = document.getElementById('userBtn'); if (b) b.setAttribute('aria-expanded', 'false'); }
+  function closeUserMenu() { const host = document.getElementById('userMenuHost'); if (host) { const dd = host.firstElementChild; if (dd && !(SS.motion && SS.motion.reduced())) { dd.classList.add('closing'); setTimeout(() => { if (dd.parentNode === host) dd.remove(); }, 190); } else clear(host); } const b = document.getElementById('userBtn'); if (b) b.setAttribute('aria-expanded', 'false'); }
   function toggleUserMenu() {
     const host = document.getElementById('userMenuHost'); if (host.firstChild) return closeUserMenu();
     const s = SS.settings.get(); const dark = s.theme === 'dark';
