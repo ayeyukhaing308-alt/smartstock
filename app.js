@@ -3435,7 +3435,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
       const W = 640, H = cfg.height || 240, P = { l: 52, r: 12, t: 12, b: 28 }; const all = series.flatMap((s) => s.values); const sc = scale(Math.min(0, Math.min.apply(null, all)), Math.max.apply(null, all));
       const x = (i) => (labels.length === 1 ? (P.l + W - P.r) / 2 : P.l + (W - P.l - P.r) * i / (labels.length - 1));
       const { g, y } = axes(cfg, fmt, sc.lo, sc.hi, sc.ticks, W, H, P, labels, x); const root = svg('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': labelFor(cfg, 'Line'), class: 'c-svg' }, g);
-      series.forEach((s, si) => { const c = colorOf(s, si); root.append(svg('polygon', { points: s.values.map((v, i) => x(i) + ',' + y(v)).join(' ') + ' ' + x(s.values.length - 1) + ',' + y(Math.max(0, sc.lo)) + ' ' + x(0) + ',' + y(Math.max(0, sc.lo)), fill: c, 'fill-opacity': 0.09, class: 'c-area' }), svg('polyline', { points: s.values.map((v, i) => x(i) + ',' + y(v)).join(' '), fill: 'none', stroke: c, 'stroke-width': 2.5, 'stroke-linejoin': 'round' })); });
+      series.forEach((s, si) => { const c = colorOf(s, si); root.append(svg('polygon', { points: s.values.map((v, i) => x(i) + ',' + y(v)).join(' ') + ' ' + x(s.values.length - 1) + ',' + y(Math.max(0, sc.lo)) + ' ' + x(0) + ',' + y(Math.max(0, sc.lo)), fill: c, 'fill-opacity': 0.09, class: 'c-area' }), svg('polyline', { pathLength: 1, points: s.values.map((v, i) => x(i) + ',' + y(v)).join(' '), fill: 'none', stroke: c, 'stroke-width': 2.5, 'stroke-linejoin': 'round' })); });
       series.forEach((s, si) => s.values.forEach((v, i) => { const c = svg('circle', { cx: x(i), cy: y(v), r: labels.length > 20 ? 3 : 4.5, fill: colorOf(s, si), stroke: 'var(--surface)', 'stroke-width': 2, class: 'c-pt', tabindex: 0, 'aria-label': `${labels[i]}: ${s.name} ${fmt(v)}` });
         c.addEventListener('mousemove', (e) => show(e, [String(labels[i])].concat(series.map((q) => q.name + ': ' + fmt(q.values[i]))))); c.addEventListener('mouseleave', hide); c.addEventListener('focus', () => { const r = c.getBoundingClientRect(); show({ clientX: r.left, clientY: r.top }, [String(labels[i]), s.name + ': ' + fmt(v)]); }); c.addEventListener('blur', hide); root.append(c); }));
       return root;
@@ -4588,6 +4588,75 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
 })();
 
 ;
+/* SmartStock — motion.js
+ * Animation helpers only (no business logic). Everything is skipped when the user prefers reduced motion.
+ *   SS.motion.enter(main)  staggered page entrance, table rows, chart drawing, number count-up, route progress bar
+ *   SS.motion.pill(nav)    sliding highlight behind the active sidebar item
+ */
+;(function () {
+  'use strict';
+  const SS = (window.SmartStock = window.SmartStock || {});
+  const reduce = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+  const GRIDS = /(^|\s)(kpi-grid|grid|stat-grid)(\s|$)/;
+
+  function countUp(el, delay) {
+    if (el.children.length || !el.firstChild || el.firstChild.nodeType !== 3) return;
+    const text = el.textContent; const m = /\d[\d,]*(\.\d+)?/.exec(text); if (!m) return;
+    const target = parseFloat(m[0].replace(/,/g, '')); if (!isFinite(target) || target === 0) return;
+    const dec = m[1] ? m[1].length - 1 : 0; const pre = text.slice(0, m.index), post = text.slice(m.index + m[0].length);
+    const node = el.firstChild; const fmt = (v) => v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const dur = 850; let start = 0;
+    node.data = pre + fmt(0) + post;
+    const tick = (now) => {
+      if (!el.isConnected) return;
+      if (!start) start = now;
+      const p = Math.min(1, (now - start) / dur);
+      node.data = p >= 1 ? text : pre + fmt(target * easeOut(p)) + post;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    setTimeout(() => requestAnimationFrame(tick), delay);
+  }
+
+  let barEl = null;
+  function routeBar() {
+    if (!barEl) { barEl = document.createElement('div'); barEl.className = 'route-bar'; barEl.setAttribute('aria-hidden', 'true'); document.body.append(barEl); }
+    barEl.classList.remove('run'); void barEl.offsetWidth; barEl.classList.add('run');
+  }
+
+  function enter(main) {
+    if (!main || reduce()) return;
+    routeBar();
+    let i = 0; const added = [];
+    const stagger = (n) => { n.classList.add('m-in'); n.style.setProperty('--d', Math.min(i, 10) * 45 + 'ms'); i++; added.push(n);
+      const done = (e) => { if (e.target !== n) return; n.classList.remove('m-in'); n.removeEventListener('animationend', done); };
+      n.addEventListener('animationend', done); };
+    Array.from(main.children).forEach((c) => { if (GRIDS.test(c.className)) Array.from(c.children).forEach(stagger); else stagger(c); });
+    main.querySelectorAll('tbody tr').forEach((r, k) => { if (k < 12) { r.classList.add('m-row'); r.style.setProperty('--d', 140 + k * 24 + 'ms'); added.push(r); } });
+    main.querySelectorAll('.pos-tile').forEach((r, k) => { if (k < 30) { r.classList.add('m-row'); r.style.setProperty('--d', 80 + k * 18 + 'ms'); added.push(r); } });
+    main.querySelectorAll('.notif').forEach((r, k) => { if (k < 14) { r.classList.add('m-row'); r.style.setProperty('--d', 80 + k * 30 + 'ms'); added.push(r); } });
+    const charts = Array.from(main.querySelectorAll('.chart, .hbar-list'));
+    charts.forEach((ch) => { ch.classList.add('chart-in'); ch.querySelectorAll('.c-bar').forEach((b, k) => b.style.setProperty('--bi', Math.min(k, 24))); });
+    main.querySelectorAll('.kpi-value, .stat .value').forEach((el, k) => countUp(el, 120 + k * 50));
+    setTimeout(() => { added.forEach((n) => n.classList.remove('m-in', 'm-row')); charts.forEach((c) => c.classList.remove('chart-in')); }, 1700);
+  }
+
+  let lastTop = null;
+  function pill(nav, instant) {
+    if (!nav) return;
+    const old = nav.querySelector('.nav-pill'); if (old) old.remove();
+    const a = nav.querySelector('a.active'); if (!a) { lastTop = null; return; }
+    const top = a.offsetTop, h = a.offsetHeight; const from = lastTop == null || instant || reduce() ? top : lastTop;
+    const p = document.createElement('span'); p.className = 'nav-pill'; p.setAttribute('aria-hidden', 'true');
+    p.style.height = h + 'px'; p.style.transform = 'translateY(' + from + 'px)'; nav.prepend(p);
+    if (from !== top) requestAnimationFrame(() => requestAnimationFrame(() => { p.style.transform = 'translateY(' + top + 'px)'; }));
+    lastTop = top;
+  }
+
+  window.addEventListener('scroll', () => { const t = document.querySelector('.topbar'); if (t) t.classList.toggle('scrolled', window.scrollY > 4); }, { passive: true });
+  SS.motion = { enter, pill, reduced: reduce };
+})();
+
 /* SmartStock — app.js
  * Application shell: navigation, hash router, theme/language, shortcuts, global search, status.
  * Pages for later phases render an honest "not built yet" notice instead of fake data.
@@ -4645,6 +4714,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
           el('span', { class: 'nav-ico', 'aria-hidden': 'true' }, icon(ico, 19)), el('span', { class: 'nav-label' }, text), id === 'notifications' ? navBadge() : null));
       });
     });
+    if (SS.motion) SS.motion.pill(nav);
     updateBell();
   }
   function renderCrumbs() {
@@ -4667,7 +4737,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const n = document.getElementById('userName'); if (n) n.textContent = name;
     const a = document.getElementById('userAvatar'); if (a) a.textContent = Array.from(name.trim())[0] || 'S';
   }
-  function closeUserMenu() { const host = document.getElementById('userMenuHost'); if (host) clear(host); const b = document.getElementById('userBtn'); if (b) b.setAttribute('aria-expanded', 'false'); }
+  function closeUserMenu() { const host = document.getElementById('userMenuHost'); if (host) { const dd = host.firstElementChild; if (dd && !(SS.motion && SS.motion.reduced())) { dd.classList.add('closing'); setTimeout(() => { if (dd.parentNode === host) dd.remove(); }, 130); } else clear(host); } const b = document.getElementById('userBtn'); if (b) b.setAttribute('aria-expanded', 'false'); }
   function toggleUserMenu() {
     const host = document.getElementById('userMenuHost'); if (host.firstChild) return closeUserMenu();
     const s = SS.settings.get(); const dark = s.theme === 'dark';
@@ -4740,7 +4810,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     if (next !== current) SS.privacy.lock();   // cost prices re-hide when leaving the view
     SS.barcode.clearScan();
     current = next;
-    closeDrawer(); renderNav(); renderCrumbs(); updateUser(); closeUserMenu(); render();
+    closeDrawer(); renderNav(); renderCrumbs(); updateUser(); closeUserMenu(); render(); if (SS.motion) SS.motion.enter(main());
     if (routed) main().focus({ preventScroll: true });   // first load keeps focus at the top so the skip link is the first Tab stop
     routed = true;
   }
@@ -4750,12 +4820,13 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
     const s = SS.settings.get();
     document.documentElement.setAttribute('data-theme', s.theme);
     const app = document.getElementById('app'); app.classList.toggle('collapsed', !!s.sidebarCollapsed);
+    if (SS.motion) SS.motion.pill(document.getElementById('nav'), true);
     setIcon(document.getElementById('themeBtn'), s.theme === 'dark' ? 'sun' : 'moon', 19);
     document.getElementById('themeBtn').setAttribute('aria-label', s.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
     const cb = document.getElementById('collapseBtn'); setIcon(cb, s.sidebarCollapsed ? 'panel-left-open' : 'panel-left-close', 19);
     cb.setAttribute('aria-label', s.sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'); cb.title = cb.getAttribute('aria-label');
   }
-  function closeDrawer() { document.getElementById('app').classList.remove('drawer-open'); document.getElementById('scrim').hidden = true; }
+  function closeDrawer() { document.getElementById('app').classList.remove('drawer-open'); }
   function updateStatic() {
     document.querySelectorAll('[data-i18n]').forEach((n) => { n.textContent = t(n.dataset.i18n); });
     const net = document.getElementById('netStatus');
@@ -4798,7 +4869,7 @@ window.SmartStock.i18n.addPhrases({"Search…": "ရှာဖွေရန်…"
 
   function bindEvents() {
     document.getElementById('collapseBtn').addEventListener('click', () => { SS.settings.patch({ sidebarCollapsed: !SS.settings.get().sidebarCollapsed }); applyTheme(); });
-    document.getElementById('menuBtn').addEventListener('click', () => { document.getElementById('app').classList.add('drawer-open'); document.getElementById('scrim').hidden = false; });
+    document.getElementById('menuBtn').addEventListener('click', () => { document.getElementById('app').classList.add('drawer-open'); });
     document.getElementById('scrim').addEventListener('click', closeDrawer);
     document.getElementById('themeBtn').addEventListener('click', () => { SS.settings.patch({ theme: SS.settings.get().theme === 'dark' ? 'light' : 'dark' }); applyTheme(); });
     document.getElementById('langSeg').addEventListener('click', (e) => {
